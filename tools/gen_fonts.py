@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Convert Terminus PSF2 console fonts into the shared UI library's font file,
-lib/gfx/src/fonts_terminus.h (picodev pd::gfx).
+lib/interface/gfx/src/fonts_terminus.h (picodev pd::gfx).
 
 Usage: python3 tools/gen_fonts.py [consolefonts_dir]
 Needs the Uni2-Terminus*.psf.gz files (Debian/Ubuntu: console-setup-linux).

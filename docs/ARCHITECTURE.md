@@ -6,8 +6,8 @@ picodev separates three things that change independently:
 
 | Axis | Examples | Where it lives | Selected by |
 |---|---|---|---|
-| **Board** — the programmable module | Pico, Pico W, Pico 2, Pico 2 W, RP2350 boards with PSRAM | `pd/board.h`, `lib/core/src/sys_rp2.cpp` | `-DPD_BOARD=` (Pico SDK board name) |
-| **Terminal** — the device the board plugs into | PicoCalc, the PC (`host`) | `lib/terminals/<name>` | `-DPD_TERMINAL=` |
+| **Board** — the programmable module | Pico, Pico W, Pico 2, Pico 2 W, RP2350 boards with PSRAM | `pd/board.h`, `lib/hardware/core/src/sys_rp2.cpp` | `-DPD_BOARD=` (Pico SDK board name) |
+| **Terminal** — the device the board plugs into | PicoCalc, the PC (`host`) | `lib/hardware/terminals/<name>` | `-DPD_TERMINAL=` |
 | **App** — your firmware | Writer, PicoBoy, the demo | `apps/<name>` | `picodev_add_app()` |
 
 Apps never name a pin, an SPI instance or a chip. They see the terminal through HAL interfaces and ask the board what it can do.
@@ -47,7 +47,7 @@ Rules that keep the layers honest:
 | `hal::Display` | Window + stream: `begin(x0,y0,x1,y1)`, `write()`/`write_async()`, `end()` | Matches SPI panels. `format()` says RGB666/RGB565/RGB888; `encode()` converts `0xRRGGBB`. `fill()` has a generic implementation. |
 | `hal::KeyboardDevice` | `read(RawKey&)`: code + pressed/held/released | Codes are the PicoCalc codes (`pd/keys.h`), the common set for all terminals. |
 | `hal::AudioOut` | Ring of stereo int16 frames at a chosen rate | `buffered()` is the audio clock: games pace on it. |
-| `hal::BlockDevice` | 512-byte sectors | FatFs is mounted on it through `lib/fs/src/diskio.cpp`. |
+| `hal::BlockDevice` | 512-byte sectors | FatFs is mounted on it through `lib/services/fs/src/diskio.cpp`. |
 | `hal::Power` | Battery %, charging | |
 
 ## Keyboard: one stream, two layers

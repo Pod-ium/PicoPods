@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../lib/bt/src/obex_receiver.h"
+#include "../lib/services/bt/src/obex_receiver.h"
 #include "pd/fs.h"
 
 extern "C" {
