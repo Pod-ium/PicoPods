@@ -1,4 +1,4 @@
-// PicoCalc Files - a file manager for the SD card, built on picodev.
+// Pod Files - a file manager for the SD card, built on the PicoPods libraries.
 //
 // Browse, mark, copy / cut / paste, delete, rename and create folders, and a
 // "USB drive" mode that shows the SD card to a computer through the Pico's
@@ -30,11 +30,12 @@ namespace gfx = pd::gfx;
 const char* const kStages[] = {"start", "display", "SD card", "settings", "ready"};
 enum Stage { kStart, kDisplay, kSd, kSettings, kReady };
 
-const char* const kWorkDir = "/.picocalc_files";
-const char* const kSettingsPath = "/.picocalc_files/settings.txt";
-const char* const kWifiPath = "/.picocalc_files/wifi.txt";
-const char* const kCaPath = "/.picocalc_files/ca.pem";
-const char* const kBtKeys = "/.picocalc_files/bt_keys.bin";   // extra trusted CAs (self-hosted servers)
+const char* const kWorkDir = "/.podfiles";
+const char* const kOldWorkDir = "/.picocalc_files";   // name used up to PicoCalc Files 1.2
+const char* const kSettingsPath = "/.podfiles/settings.txt";
+const char* const kWifiPath = "/.podfiles/wifi.txt";
+const char* const kCaPath = "/.podfiles/ca.pem";   // extra trusted CAs (self-hosted servers)
+const char* const kBtKeys = "/.podfiles/bt_keys.bin";
 constexpr size_t kMaxEntries = 2000;
 
 const char* const kSortNames[] = {"Name", "Size", "Type"};
@@ -1478,7 +1479,7 @@ void FileManager::help() {
 
 void FileManager::about() {
     ui::message(ui_, "About",
-                {std::string("PicoCalc Files ") + PD_APP_VERSION, "A file manager built on picodev.",
+                {std::string("Pod Files ") + PD_APP_VERSION, "A file manager built on PicoPods.",
                  std::string("Board: ") + pd::board::name() + " (" + pd::board::chip() + ")",
                  std::string("Terminal: ") + term_.name(),
                  space_known_ ? "Card: " + size_text(total_) + ", " + size_text(free_) + " free" : "Card: ?"});
@@ -1643,10 +1644,16 @@ void FileManager::run() {
     }
 }
 
+// Pod Files was PicoCalc Files: take over its settings, Wi-Fi credentials
+// and Bluetooth pairings once, by renaming the old folder.
+void migrate_work_dir() {
+    if (!pd::fs::exists(kWorkDir) && pd::fs::is_dir(kOldWorkDir)) pd::fs::rename(kOldWorkDir, kWorkDir);
+}
+
 }  // namespace
 
 int main() {
-    pd::diag::begin("PicoCalc Files", PD_APP_VERSION, kStages, pd::array_count(kStages));
+    pd::diag::begin("Pod Files", PD_APP_VERSION, kStages, pd::array_count(kStages));
     pd::diag::stage(kStart);
 
     pd::TerminalConfig cfg;
@@ -1662,6 +1669,7 @@ int main() {
     pd::app::mount_storage(ui);
 
     pd::diag::stage(kSettings);
+    migrate_work_dir();
     FileManager fm(term, ui);
 
     pd::diag::stage(kReady);

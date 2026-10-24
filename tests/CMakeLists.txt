@@ -75,7 +75,7 @@ add_test(NAME podboy_script COMMAND podboy WORKING_DIRECTORY ${_tmp})
 set_tests_properties(podboy_script PROPERTIES TIMEOUT 60 ENVIRONMENT
     "PD_SDCARD=${_tmp}/podboy_sd;PD_FRAMES=${_tmp}/podboy_frames;PD_KEYS=down,enter,bksp,shot")
 
-# PicoCalc Files: make a folder, copy a file into it, cut/paste, delete, hidden
+# Pod Files: make a folder, copy a file into it, cut/paste, delete, hidden
 # toggle, menu, help; the card must end up in the expected state.
 set(_fsd ${_tmp}/files_sd)
 # (pauses after each operation: the app drops type-ahead once one finishes)
@@ -83,10 +83,17 @@ set(_fkeys "wait:100,n,ctrl+u,text:Box,enter,wait:100,down,down,c,up,up,enter,v,
 set(_fkeys "${_fkeys},bksp,down,x,up,enter,v,wait:100,shot,bksp,down,down,d,wait:100,shot,enter,wait:100")
 set(_fkeys "${_fkeys},r,ctrl+u,text:Crate,enter,wait:100,esc,esc,wait:50,f1,esc,wait:50,i,wait:50,esc,wait:50")
 set(_fkeys "${_fkeys},u,wait:50,esc,wait:50,h,h,s,s,s,shot")
-add_test(NAME files_script COMMAND ${CMAKE_COMMAND} -E env
+add_test(NAME podfiles_script COMMAND ${CMAKE_COMMAND} -E env
     PD_SDCARD=${_fsd} PD_FRAMES=${_tmp}/files_frames PD_KEYS=${_fkeys}
-    sh -c "rm -rf ${_fsd} ${_tmp}/files_frames && mkdir -p ${_fsd}/Docs ${_tmp}/files_frames && echo hello > ${_fsd}/Docs/a.txt && echo world > ${_fsd}/b.txt && echo x > ${_fsd}/c.txt && $<TARGET_FILE:picocalc_files> && sh ${CMAKE_CURRENT_SOURCE_DIR}/check_files.sh ${_fsd}")
-set_tests_properties(files_script PROPERTIES TIMEOUT 60)
+    sh -c "rm -rf ${_fsd} ${_tmp}/files_frames && mkdir -p ${_fsd}/Docs ${_tmp}/files_frames && echo hello > ${_fsd}/Docs/a.txt && echo world > ${_fsd}/b.txt && echo x > ${_fsd}/c.txt && $<TARGET_FILE:podfiles> && sh ${CMAKE_CURRENT_SOURCE_DIR}/check_files.sh ${_fsd}")
+set_tests_properties(podfiles_script PROPERTIES TIMEOUT 60)
+
+# Pod Files on a card used by PicoCalc Files: the old /.picocalc_files folder
+# (settings, Wi-Fi, Bluetooth pairings) is renamed to /.podfiles once.
+set(_msd ${_tmp}/podfiles_migrate_sd)
+add_test(NAME podfiles_migrate COMMAND ${CMAKE_COMMAND} -E env PD_SDCARD=${_msd} PD_KEYS=wait:100
+    sh -c "rm -rf ${_msd} && mkdir -p ${_msd}/.picocalc_files && echo 'ssid=home' > ${_msd}/.picocalc_files/wifi.txt && $<TARGET_FILE:podfiles> && test ! -e ${_msd}/.picocalc_files && grep -q ssid=home ${_msd}/.podfiles/wifi.txt")
+set_tests_properties(podfiles_migrate PROPERTIES TIMEOUT 60)
 
 # Git clone against real servers (needs network; enable with -DPD_NET_TESTS=ON).
 if(PD_HAS_TLS)
@@ -104,16 +111,16 @@ if(PD_HAS_BT)
     file(MAKE_DIRECTORY ${_tmp}/obex_sd)
 endif()
 
-# PicoCalc Files: receive a file over (simulated) Bluetooth - pairing prompt,
+# Pod Files: receive a file over (simulated) Bluetooth - pairing prompt,
 # then a real OBEX Object Push session through the real receiver. The file
 # must arrive byte-identical, with its non-ASCII name.
 if(PD_HAS_BT)
     set(_bsd ${_tmp}/bt_sd)
-    add_test(NAME files_bt_receive COMMAND ${CMAKE_COMMAND} -E env
+    add_test(NAME podfiles_bt_receive COMMAND ${CMAKE_COMMAND} -E env
         PD_SDCARD=${_bsd} PD_FRAMES=${_tmp}/bt_frames "PD_BT_SIM_FILE=${_tmp}/foto città.jpg"
         "PD_KEYS=wait:100,enter,wait:50,b,wait:50,enter,wait:1400,enter,wait:1500,esc,wait:200"
-        sh -c "rm -rf ${_bsd} ${_tmp}/bt_frames && mkdir -p ${_bsd}/Inbox ${_tmp}/bt_frames && head -c 40000 /dev/urandom > '${_tmp}/foto città.jpg' && $<TARGET_FILE:picocalc_files> && cmp '${_tmp}/foto città.jpg' '${_bsd}/Inbox/foto città.jpg' && test ! -e '${_bsd}/Inbox/.bt-incoming.part'")
-    set_tests_properties(files_bt_receive PROPERTIES TIMEOUT 60)
+        sh -c "rm -rf ${_bsd} ${_tmp}/bt_frames && mkdir -p ${_bsd}/Inbox ${_tmp}/bt_frames && head -c 40000 /dev/urandom > '${_tmp}/foto città.jpg' && $<TARGET_FILE:podfiles> && cmp '${_tmp}/foto città.jpg' '${_bsd}/Inbox/foto città.jpg' && test ! -e '${_bsd}/Inbox/.bt-incoming.part'")
+    set_tests_properties(podfiles_bt_receive PROPERTIES TIMEOUT 60)
 endif()
 
 # BTstack lifecycle: the real BTstack core (HCI, L2CAP, RFCOMM, SDP, GOEP) on a
@@ -144,9 +151,9 @@ endif()
 # Pairing started by the phone while the device list is open: the request must
 # be shown and answered from inside the menu (ui idle hook + key::Repaint).
 if(PD_HAS_BT)
-    add_test(NAME files_bt_phone_pairing COMMAND ${CMAKE_COMMAND} -E env
+    add_test(NAME podfiles_bt_phone_pairing COMMAND ${CMAKE_COMMAND} -E env
         PD_SDCARD=${_tmp}/btp_sd PD_BT_SIM_PHONE_PAIR=1
         "PD_KEYS=wait:100,b,wait:50,enter,wait:3000,enter,wait:200,esc,wait:100"
-        sh -c "rm -rf ${_tmp}/btp_sd && mkdir -p ${_tmp}/btp_sd && echo hi > ${_tmp}/btp_sd/doc.txt && $<TARGET_FILE:picocalc_files>")
-    set_tests_properties(files_bt_phone_pairing PROPERTIES PASS_REGULAR_EXPRESSION "pairing answered: yes" TIMEOUT 60)
+        sh -c "rm -rf ${_tmp}/btp_sd && mkdir -p ${_tmp}/btp_sd && echo hi > ${_tmp}/btp_sd/doc.txt && $<TARGET_FILE:podfiles>")
+    set_tests_properties(podfiles_bt_phone_pairing PROPERTIES PASS_REGULAR_EXPRESSION "pairing answered: yes" TIMEOUT 60)
 endif()

@@ -1,5 +1,5 @@
-picopods_add_pod(picocalc_files
+picopods_add_pod(podfiles
     SOURCES src/main.cpp
     LIBS pd_diag pd_usb_drive pd_git pd_wifi pd_bt
-    TITLE "PicoCalc Files"
-    VERSION "1.2.11")
+    TITLE "Pod Files"
+    VERSION "1.3.0")
