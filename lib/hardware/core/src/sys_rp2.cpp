@@ -35,9 +35,22 @@ bool set_clock_khz(uint32_t khz) {
         vreg_set_voltage(VREG_VOLTAGE_1_15);
         ::sleep_ms(10);
     }
-    // clk_peri follows clk_sys, so SPI/I2C/UART dividers must be recomputed
-    // after this call (the drivers do it in their init()).
-    return set_sys_clock_khz(khz, false);
+    if (!set_sys_clock_khz(khz, false)) return false;
+    // The SDK parks clk_peri on the 48 MHz USB PLL when clk_sys changes
+    // (PICO_CLOCK_ADJUST_PERI_CLOCK_WITH_SYS_CLOCK=0), which caps every SPI
+    // bus at 24 MHz. Feed it from clk_sys again, kept at or below the stock
+    // clock: the RP2350 can divide it (200 MHz -> 100 MHz, so the LCD gets an
+    // exact 50 MHz and the SD card 25 MHz); the RP2040 cannot.
+    // SPI/I2C/UART dividers are recomputed by the drivers' init(), after this.
+    const uint32_t hz = khz * 1000;
+#if PD_CHIP_RP2350
+    uint32_t div = (khz + board::default_clock_khz() - 1) / board::default_clock_khz();
+    if (div > 3) div = 3;   // CLK_PERI_DIV is 1..3
+    clock_configure_int_divider(clk_peri, 0, CLOCKS_CLK_PERI_CTRL_AUXSRC_VALUE_CLK_SYS, hz, div);
+#else
+    clock_configure_undivided(clk_peri, 0, CLOCKS_CLK_PERI_CTRL_AUXSRC_VALUE_CLK_SYS, hz);
+#endif
+    return true;
 }
 
 uint32_t clock_khz() { return clock_get_hz(clk_sys) / 1000; }

@@ -23,7 +23,7 @@ if(NOT PD_HOST)
     target_link_libraries(podboy PRIVATE hardware_vreg)
     # A scrolling game changes every line, so each shown frame is the whole
     # 320x288 x 18-bit image (276 KB). At the terminal's default 25 MHz that is
-    # 88 ms (~11 fps); at 50 MHz (clk_peri 200 MHz / 4) 44 ms, so every third
+    # 88 ms (~11 fps); at 50 MHz (clk_peri 100 MHz / 2) 44 ms, so every third
     # emulated frame reaches the screen (~20 fps). Forum reports put this panel
     # stable up to 62.5-75 MHz. Set it back to 25000000 if the image glitches.
     target_compile_definitions(podboy PRIVATE PD_PICOCALC_LCD_HZ=50000000)
