@@ -37,10 +37,11 @@ be true before a stage is merged).
 
 ### M1: Import the original sources
 Stage `m1/import-sources`. Gate: G-host, G-fw on the final snapshot.
-- [ ] PicoCalc Writer 2.1.0 into `legacy/picocalc-writer`
-- [ ] PicoBoy 1.0 into `legacy/picoboy`
-- [ ] picodev 1 at the root
-- [ ] picodev 2 on top (one diff commit)
+Gate result: G-host 23/23 tests, G-fw pico2_w 6 `.uf2`.
+- [x] PicoCalc Writer 2.1.0 into `legacy/picocalc-writer`
+- [x] PicoBoy 1.0 into `legacy/picoboy`
+- [x] picodev 1 at the root
+- [x] picodev 2 on top (one diff commit)
 
 ### M2: Common libraries
 Stage `m2/common-libs`. Gate: G-host, G-fw.
