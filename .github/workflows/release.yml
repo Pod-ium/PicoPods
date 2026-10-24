@@ -1,0 +1,50 @@
+# On every published release: build PodBoy, Pod Writer and Pod Files for the
+# PicoCalc + Pico 2 W and attach them to the release as
+# <pod>_<version>.uf2 (e.g. podboy_1.0.0.uf2 for tag v1.0.0), with a
+# SHA256SUMS file. Can also be run by hand for an existing release tag.
+name: Release firmware
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag to build and attach firmware to (e.g. v1.0.0)"
+        required: true
+
+permissions:
+  contents: write   # upload release assets
+
+env:
+  PICO_SDK_REF: "2.1.1"
+  TAG: ${{ github.event.release.tag_name || inputs.tag }}
+
+jobs:
+  firmware:
+    name: Build and attach .uf2
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+      - name: Pico SDK
+        uses: actions/checkout@v4
+        with:
+          repository: raspberrypi/pico-sdk
+          ref: ${{ env.PICO_SDK_REF }}
+          path: pico-sdk
+          submodules: true
+      - name: Packages
+        run: >
+          sudo apt-get update && sudo apt-get install -y cmake ninja-build python3
+          gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
+      - name: Build
+        env:
+          PICO_SDK_PATH: ${{ github.workspace }}/pico-sdk
+          CMAKE_GENERATOR: Ninja
+        run: tools/package_release.sh "$TAG" dist
+      - name: Attach to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$TAG" dist/* --clobber --repo "$GITHUB_REPOSITORY"
