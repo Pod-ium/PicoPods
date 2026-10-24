@@ -1,4 +1,4 @@
-// Host tests for the syntax highlighter (lib/text/src/syntax.cpp).
+// Host tests for the syntax highlighter (lib/content/text/src/syntax.cpp).
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>

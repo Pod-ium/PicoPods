@@ -1,7 +1,7 @@
 # USB probe: the Pico SDK's own USB serial port (no picodev USB code) plus a
 # live view of the USB clock and controller state. Tells a firmware problem
 # from a hardware / environment one.
-picodev_add_app(pd_usbprobe
+picopods_add_pod(pd_usbprobe
     SOURCES src/main.cpp
     TITLE "USB probe"
     VERSION "1.0"

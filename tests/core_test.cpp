@@ -1,4 +1,4 @@
-// Host tests for the picodev core libraries, run on the host terminal:
+// Host tests for the PicoPods core libraries, run on the host terminal:
 // settings, paths, fs, input layers, gfx rendering, ui dialogs (driven by
 // injected key events), the indexed blitter and the flash cache.
 #include <cassert>

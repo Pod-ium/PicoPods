@@ -45,10 +45,11 @@ Gate result: G-host 23/23 tests, G-fw pico2_w 6 `.uf2`.
 
 ### M2: Common libraries
 Stage `m2/common-libs`. Gate: G-host, G-fw.
-- [ ] Gate script (`tools/gate.sh`)
-- [ ] Build system renamed to PicoPods (`picopods_add_pod()`)
-- [ ] Libraries grouped by layer: `lib/hardware`, `lib/services`, `lib/interface`, `lib/content`
-- [ ] Library documentation
+Gate result: G-host 23/23 tests, G-fw pico2_w / pico2 (6 `.uf2`), pico_w / pico (5, no PodBoy on RP2040).
+- [x] Gate script (`tools/gate.sh`)
+- [x] Build system renamed to PicoPods (`picopods_add_pod()`)
+- [x] Libraries grouped by layer: `lib/hardware`, `lib/services`, `lib/interface`, `lib/content`
+- [x] Library documentation
 
 ### M3: Pods
 One stage per pod. Gate: G-host, G-fw, then G-names at the end.

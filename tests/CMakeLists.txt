@@ -61,7 +61,7 @@ set_tests_properties(demo_script PROPERTIES TIMEOUT 60 ENVIRONMENT
 
 # PicoCalc Writer: type a document, save it, help, menu, theme, ePub export, Wi-Fi menu.
 file(MAKE_DIRECTORY ${_tmp}/writer_sd)
-set(_wkeys "wait:200,text:# Hello picodev,enter,enter,text:Some *text* here.,ctrl+s,ctrl+u,text:/hello.md,enter")
+set(_wkeys "wait:200,text:# Hello PicoPods,enter,enter,text:Some *text* here.,ctrl+s,ctrl+u,text:/hello.md,enter")
 set(_wkeys "${_wkeys},f1,esc,f6,f5,esc,shot,esc,f7,enter,wait:200,f9,esc,shot")
 add_test(NAME writer_script COMMAND ${CMAKE_COMMAND} -E env
     PD_SDCARD=${_tmp}/writer_sd PD_FRAMES=${_tmp}/writer_frames PD_KEYS=${_wkeys}
@@ -122,7 +122,7 @@ endif()
 if(PD_HAS_BT AND DEFINED PICO_SDK_PATH)
     set(_B ${PICO_SDK_PATH}/lib/btstack)
     set(_S ${_B}/src)
-    add_executable(btstack_lifecycle_test btstack_lifecycle_test.cpp ${CMAKE_CURRENT_SOURCE_DIR}/../lib/bt/src/btstack_modules.cpp
+    add_executable(btstack_lifecycle_test btstack_lifecycle_test.cpp ${CMAKE_CURRENT_SOURCE_DIR}/../lib/services/bt/src/btstack_modules.cpp
         ${_S}/hci.c ${_S}/hci_cmd.c ${_S}/hci_dump.c ${_S}/l2cap.c ${_S}/l2cap_signaling.c ${_S}/btstack_memory.c
         ${_S}/btstack_memory_pool.c ${_S}/btstack_linked_list.c ${_S}/btstack_util.c ${_S}/btstack_run_loop.c
         ${_S}/btstack_tlv.c ${_S}/ad_parser.c ${_S}/classic/rfcomm.c ${_S}/classic/sdp_server.c ${_S}/classic/sdp_util.c

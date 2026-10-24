@@ -9,7 +9,7 @@
 #include <cstring>
 #include <vector>
 
-#include "../lib/bt/src/btstack_modules.h"
+#include "../lib/services/bt/src/btstack_modules.h"
 
 extern "C" {
 #include "btstack.h"

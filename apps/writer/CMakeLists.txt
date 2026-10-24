@@ -1,7 +1,7 @@
 # PicoCalc Writer - distraction-free text editor, on picodev.
 # On boards without Wi-Fi, pd_net reports "No Wi-Fi on this board" (F8/F9).
 set(_libs pd_diag pd_text pd_epub pd_wifi pd_crosspoint)
-picodev_add_app(picocalc_writer
+picopods_add_pod(picocalc_writer
     SOURCES src/main.cpp src/app.cpp src/app_share.cpp
     LIBS ${_libs}
     TITLE "PicoCalc Writer"
