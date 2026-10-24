@@ -5,7 +5,7 @@ if(NOT PD_HOST AND PICO_PLATFORM MATCHES "rp2040")
     message(STATUS "PicoBoy skipped: it needs an RP2350 board (pico2, pico2_w)")
     return()
 endif()
-picodev_add_app(picoboy
+picopods_add_pod(picoboy
     SOURCES
         src/main.cpp
         src/gb/gb.cpp

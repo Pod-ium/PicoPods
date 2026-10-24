@@ -3,7 +3,7 @@
 # read and write it without taking the card out.
 #
 # Uses the board's native USB, so an app that links it cannot also use
-# USB_STDIO in picodev_add_app() (both would provide the USB descriptors).
+# USB_STDIO in picopods_add_pod() (both would provide the USB descriptors).
 # On the host build the mode reports "not available".
 add_library(pd_usb_drive INTERFACE)
 target_include_directories(pd_usb_drive INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)

@@ -1,4 +1,4 @@
-# picodev - reusable base for PicoCalc (and other terminal) firmware.
+# PicoPods - common PicoCalc libraries and the firmwares (pods) built on them.
 #
 # Device build (default: PicoCalc + Pico 2 W):
 #   cmake -B build -DPICO_SDK_PATH=/path/to/pico-sdk
@@ -8,9 +8,9 @@
 #   cmake -B build-host -DPD_TERMINAL=host && cmake --build build-host -j
 #   ctest --test-dir build-host
 cmake_minimum_required(VERSION 3.13)
-include(cmake/picodev_init.cmake)
-project(picodev C CXX ASM)
-include(cmake/picodev.cmake)
+include(cmake/picopods_init.cmake)
+project(picopods C CXX ASM)
+include(cmake/picopods.cmake)
 
 add_subdirectory(apps/template)
 add_subdirectory(apps/demo)

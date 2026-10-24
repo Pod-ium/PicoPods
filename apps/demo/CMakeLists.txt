@@ -2,7 +2,7 @@ set(_libs pd_diag pd_flash_cache pd_epub)
 if(PD_HAS_WIFI)
     list(APPEND _libs pd_wifi)
 endif()
-picodev_add_app(pd_demo
+picopods_add_pod(pd_demo
     SOURCES main.cpp
     LIBS ${_libs}
     TITLE "picodev demo"
