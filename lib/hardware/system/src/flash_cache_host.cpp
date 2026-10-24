@@ -1,4 +1,4 @@
-// picodev - flash cache on the host: the file is kept in RAM.
+// PicoPods - flash cache on the host: the file is kept in RAM.
 #include <cstdlib>
 #include <cstring>
 #include <string>

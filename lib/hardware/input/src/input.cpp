@@ -1,4 +1,4 @@
-// picodev - keyboard layers (raw events, key state, modifiers, auto-repeat).
+// PicoPods - keyboard layers (raw events, key state, modifiers, auto-repeat).
 // The cooked layer follows PicoCalc Writer's keyboard; the background queue
 // follows PicoBoy's core-1 reader.
 #include "pd/input.h"

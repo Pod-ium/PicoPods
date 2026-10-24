@@ -1,4 +1,4 @@
-// picodev - path string helpers ('/' separated, UTF-8 safe).
+// PicoPods - path string helpers ('/' separated, UTF-8 safe).
 #pragma once
 #include <string>
 

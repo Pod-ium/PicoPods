@@ -1,4 +1,4 @@
-// picodev - what the MCU board (the module plugged into the terminal) can do.
+// PicoPods - what the MCU board (the module plugged into the terminal) can do.
 //
 // A "board" is the programmable module: Pico, Pico W, Pico 2, Pico 2 W, or a
 // compatible third-party RP2040/RP2350 board. A "terminal" is the device it

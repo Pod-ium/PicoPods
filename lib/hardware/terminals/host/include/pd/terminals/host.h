@@ -1,4 +1,4 @@
-// picodev terminal - "host": runs picodev apps on a PC, headless.
+// PicoPods terminal - "host": runs PicoPods apps on a PC, headless.
 //
 // The display is an RGB framebuffer that can be written out as PPM images, the
 // keyboard plays a script, the SD card is a folder, audio is discarded (but

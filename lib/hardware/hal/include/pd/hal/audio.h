@@ -1,4 +1,4 @@
-// picodev HAL - a stereo audio output fed with 16-bit samples.
+// PicoPods HAL - a stereo audio output fed with 16-bit samples.
 #pragma once
 #include <cstdint>
 

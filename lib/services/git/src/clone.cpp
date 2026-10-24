@@ -58,7 +58,7 @@ std::string repo_name(const std::string& url) {
 
 namespace {
 
-const char* const kUserAgent = "git/2.45.2 (picodev)";
+const char* const kUserAgent = "git/2.45.2 (picopods)";
 
 // Reads pkt-lines from an HTTP body.
 class PktReader {
@@ -216,7 +216,7 @@ bool fetch_pack(Ctx& c, const Sha& want, const std::string& caps, const std::str
     if (has_cap(caps, "ofs-delta")) ask += " ofs-delta";
     if (c.opt.depth > 0 && has_cap(caps, "shallow")) ask += " shallow";
     if (has_cap(caps, "no-progress")) ask += " no-progress";
-    ask += " agent=picodev/1.0\n";
+    ask += " agent=picopods/1.0\n";
     std::string body = pkt(ask);
     if (c.opt.depth > 0) body += pkt("deepen " + std::to_string(c.opt.depth) + "\n");
     body += "0000";
@@ -552,7 +552,7 @@ CloneResult clone(const CloneOptions& opt, const CloneHooks& hooks) {
 
     // Folders.
     c.git = c.dir + "/.git";
-    c.tmp = c.git + "/picodev-tmp";
+    c.tmp = c.git + "/picopods-tmp";
     if (!fs::mkdirs((c.git + "/objects/pack").c_str()) || !fs::mkdirs((c.git + "/refs/heads").c_str()) ||
         !fs::mkdirs((c.git + "/refs/tags").c_str()) || !fs::mkdirs((c.git + "/refs/remotes/origin").c_str()) ||
         !fs::mkdirs(c.tmp.c_str()) || !fs::mkdirs((c.git + "/objects/info").c_str())) {
@@ -630,7 +630,7 @@ CloneResult clone(const CloneOptions& opt, const CloneHooks& hooks) {
         for (const Sha& x : shallow) s += x.hex() + "\n";
         ok = ok && write_text(c.git + "/shallow", s);
     }
-    ok = ok && write_text(c.git + "/description", "Cloned by picodev\n");
+    ok = ok && write_text(c.git + "/description", "Cloned by PicoPods\n");
     fs::remove_all({c.tmp}, fs::OpHooks());
     if (!ok) return fail("cannot write the repository files (card full?)");
     r.commit = hex;

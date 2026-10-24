@@ -1,4 +1,4 @@
-// picodev - upload to an e-reader running CrossPoint (Xteink X3 / X4) over HTTP.
+// PicoPods - upload to an e-reader running CrossPoint (Xteink X3 / X4) over HTTP.
 //
 // CrossPoint's file-transfer web server (open "File Transfer" on the reader,
 // joined to the same Wi-Fi) accepts:

@@ -1,4 +1,4 @@
-// picodev - Wi-Fi and a minimal blocking TCP client (from PicoCalc Writer).
+// PicoPods - Wi-Fi and a minimal blocking TCP client (from PicoCalc Writer).
 //
 // On the device this drives the Pico 2 W's CYW43 radio through lwIP in
 // "poll" mode (src/net_cyw43.cpp): nothing runs in the background, every call

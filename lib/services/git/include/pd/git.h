@@ -1,4 +1,4 @@
-// picodev - Git client: clone over HTTPS (smart HTTP protocol, shallow by
+// PicoPods - Git client: clone over HTTPS (smart HTTP protocol, shallow by
 // default) straight onto the SD card.
 //
 // The result is a normal Git repository: the working files plus a .git

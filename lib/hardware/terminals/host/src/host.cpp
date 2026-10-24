@@ -1,4 +1,4 @@
-// picodev terminal - host (PC) implementation.
+// PicoPods terminal - host (PC) implementation.
 #include "pd/terminals/host.h"
 
 #include <cctype>

@@ -1,4 +1,4 @@
-// picodev - text and shapes. The cell renderer comes from PicoCalc Writer
+// PicoPods - text and shapes. The cell renderer comes from PicoCalc Writer
 // (one pixel row at a time, colours converted once per cell); the string API
 // follows picocalc_ui.
 #include "pd/gfx.h"

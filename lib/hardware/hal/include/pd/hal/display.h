@@ -1,4 +1,4 @@
-// picodev HAL - a pixel display.
+// PicoPods HAL - a pixel display.
 //
 // Drawing code talks to this interface only. A driver implements the window /
 // stream model that SPI panels use: open a rectangle, stream pixels row by row

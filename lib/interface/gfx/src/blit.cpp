@@ -1,4 +1,4 @@
-// picodev - indexed framebuffer blitter (PicoBoy's frame streaming, generalised).
+// PicoPods - indexed framebuffer blitter (PicoBoy's frame streaming, generalised).
 #include "pd/blit.h"
 
 #include <cstdlib>

@@ -1,4 +1,4 @@
-// picodev terminal - ClockworkPi PicoCalc (mainboard v2.0) with a Pico-format
+// PicoPods terminal - ClockworkPi PicoCalc (mainboard v2.0) with a Pico-format
 // board (Pico, Pico W, Pico 2, Pico 2 W, compatible RP2040/RP2350 boards).
 //
 // Pin map from ClockworkPi's reference code and the UF2 Loader sources. Every

@@ -1,5 +1,5 @@
 // Randomized test of TextBuffer + Layout against a std::string model.
-// Build & run:  ctest (picodev host build)
+// Build & run:  ctest (PicoPods host build)
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>

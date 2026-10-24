@@ -1,4 +1,4 @@
-// picodev - syntax colours matching the three pd::ui themes (from PicoCalc
+// PicoPods - syntax colours matching the three pd::ui themes (from PicoCalc
 // Writer). palette(i)[cls] is the colour of syn::Cls cls; Plain uses the
 // theme's fg, so palette(i)[Plain] is 0.
 #pragma once

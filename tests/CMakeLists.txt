@@ -61,7 +61,7 @@ set_tests_properties(demo_script PROPERTIES TIMEOUT 60 ENVIRONMENT
 
 # PicoCalc Writer: type a document, save it, help, menu, theme, ePub export, Wi-Fi menu.
 file(MAKE_DIRECTORY ${_tmp}/writer_sd)
-set(_wkeys "wait:200,text:# Hello picodev,enter,enter,text:Some *text* here.,ctrl+s,ctrl+u,text:/hello.md,enter")
+set(_wkeys "wait:200,text:# Hello PicoPods,enter,enter,text:Some *text* here.,ctrl+s,ctrl+u,text:/hello.md,enter")
 set(_wkeys "${_wkeys},f1,esc,f6,f5,esc,shot,esc,f7,enter,wait:200,f9,esc,shot")
 add_test(NAME writer_script COMMAND ${CMAKE_COMMAND} -E env
     PD_SDCARD=${_tmp}/writer_sd PD_FRAMES=${_tmp}/writer_frames PD_KEYS=${_wkeys}

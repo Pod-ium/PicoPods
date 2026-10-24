@@ -1,4 +1,4 @@
-// picodev driver - stereo PWM audio fed by DMA from a ring buffer (PicoBoy's
+// PicoPods driver - stereo PWM audio fed by DMA from a ring buffer (PicoBoy's
 // audio path, with the sample rate as a parameter).
 //
 // The PWM carrier runs at the sample rate and its wrap event paces the DMA,

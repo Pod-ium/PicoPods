@@ -1,4 +1,4 @@
-// picodev - file system.
+// PicoPods - file system.
 //
 // Device: FatFs (FAT32 / exFAT, UTF-8 long names) on the terminal's block
 // device (the SD card). Host: plain POSIX files under a root folder. Both

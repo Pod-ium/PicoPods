@@ -1,4 +1,4 @@
-// picodev umbrella header: everything a typical app needs.
+// PicoPods umbrella header: everything a typical app needs.
 #pragma once
 #include "pd/app.h"
 #include "pd/board.h"

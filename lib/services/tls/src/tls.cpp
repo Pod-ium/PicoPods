@@ -128,7 +128,7 @@ bool TlsClient::connect(const std::string& host, uint16_t port, uint32_t tmo, co
         close();
         return false;
     }
-    static const char pers[] = "picodev-tls";
+    static const char pers[] = "picopods-tls";
     int r = mbedtls_ctr_drbg_seed(&m.drbg, mbedtls_entropy_func, &m.entropy,
                                   reinterpret_cast<const unsigned char*>(pers), sizeof pers - 1);
     if (r == 0) r = mbedtls_ssl_config_defaults(&m.conf, MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_STREAM,

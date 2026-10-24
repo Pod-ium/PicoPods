@@ -1,4 +1,4 @@
-// picodev driver - the PicoCalc "south bridge": an STM32 on I2C that scans the
+// PicoPods driver - the PicoCalc "south bridge": an STM32 on I2C that scans the
 // keyboard and measures the battery.
 //
 // Protocol (ClockworkPi reference code): write a register number, wait, read

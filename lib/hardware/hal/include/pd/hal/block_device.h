@@ -1,4 +1,4 @@
-// picodev HAL - a 512-byte-sector block device (SD card, flash disk...).
+// PicoPods HAL - a 512-byte-sector block device (SD card, flash disk...).
 // pd::fs mounts FatFs on it.
 #pragma once
 #include <cstdint>

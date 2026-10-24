@@ -24,7 +24,7 @@ namespace pd::bt::detail {
 
 void on_stack_deinit();   // bt_cyw43.cpp: set everything up again on the next start
 
-std::string g_key_file = "/.picodev/bt_keys.bin";
+std::string g_key_file = "/.picopods/bt_keys.bin";
 bool g_keys_dirty = false;
 
 namespace {

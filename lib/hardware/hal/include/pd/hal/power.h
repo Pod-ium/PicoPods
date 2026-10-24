@@ -1,4 +1,4 @@
-// picodev HAL - battery and power information.
+// PicoPods HAL - battery and power information.
 #pragma once
 
 namespace pd::hal {

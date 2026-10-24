@@ -1,4 +1,4 @@
-// picodev - boot diagnostics and crash screen (PicoCalc Writer's diag.cpp,
+// PicoPods - boot diagnostics and crash screen (PicoCalc Writer's diag.cpp,
 // with app-defined stages; the fault hook also supports RP2040's Cortex-M0+).
 #include "pd/diag.h"
 
@@ -16,7 +16,7 @@ constexpr uint32_t kMagicMask = 0xFFFF0000u;
 constexpr uint16_t kDone = 0xFFFF;
 constexpr int kScratch = 3;   // not used by the SDK or by the PicoCalc UF2 Loader
 
-const char* g_app = "picodev app";
+const char* g_app = "PicoPods app";
 const char* g_version = "";
 const char* const* g_names = nullptr;
 int g_count = 0;

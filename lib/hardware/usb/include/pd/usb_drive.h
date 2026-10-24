@@ -1,4 +1,4 @@
-// picodev - "USB drive" mode: the SD card becomes a USB flash drive.
+// PicoPods - "USB drive" mode: the SD card becomes a USB flash drive.
 //
 // While the mode runs, the board's own USB port (the Pico's micro-USB)
 // presents the terminal's storage to a computer as a standard mass-storage
@@ -18,9 +18,9 @@
 namespace pd::usb {
 
 struct DriveOptions {
-    const char* vendor = "picodev";     // SCSI vendor, up to 8 characters
+    const char* vendor = "PicoPods";    // SCSI vendor, up to 8 characters
     const char* product = "SD card";    // SCSI product, up to 16 characters
-    const char* manufacturer = "picodev";          // USB strings shown by the OS
+    const char* manufacturer = "PicoPods";         // USB strings shown by the OS
     const char* usb_product = "PicoCalc SD card";
     const char* title = "USB drive";    // status bar text
     bool read_only = false;             // the computer can only read

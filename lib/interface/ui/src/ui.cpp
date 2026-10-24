@@ -1,4 +1,4 @@
-// picodev - menus and dialogs. Layout and behaviour follow picocalc_ui and
+// PicoPods - menus and dialogs. Layout and behaviour follow picocalc_ui and
 // PicoCalc Writer; geometry is derived from the display size and the font.
 #include <strings.h>
 

@@ -1,4 +1,4 @@
-// picodev - Bluetooth file transfer (OBEX Object Push), both directions.
+// PicoPods - Bluetooth file transfer (OBEX Object Push), both directions.
 //
 // The standard "send file via Bluetooth": Android (Share -> Bluetooth),
 // Ubuntu / GNOME (Settings -> Bluetooth -> Send Files; bluetooth-sendto),

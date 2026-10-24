@@ -1,4 +1,4 @@
-// picodev driver - ST7365P / ILI9488-class SPI panel (the PicoCalc's 320x320 IPS).
+// PicoPods driver - ST7365P / ILI9488-class SPI panel (the PicoCalc's 320x320 IPS).
 //
 // The panel only accepts 18-bit colour over SPI (3 bytes per pixel; the 16-bit
 // mode is silently ignored), the window setup and the pixels must share one

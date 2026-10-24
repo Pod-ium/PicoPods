@@ -1,4 +1,4 @@
-// picodev - Wi-Fi manager (from PicoCalc Writer's app_share.cpp).
+// PicoPods - Wi-Fi manager (from PicoCalc Writer's app_share.cpp).
 #include "pd/wifi.h"
 
 #include <cstdio>

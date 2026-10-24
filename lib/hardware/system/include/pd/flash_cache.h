@@ -1,4 +1,4 @@
-// picodev - keep one large file from the SD card in flash, memory-mapped.
+// PicoPods - keep one large file from the SD card in flash, memory-mapped.
 //
 // For data bigger than RAM that must be read at memory speed: game ROMs (what
 // PicoBoy uses it for), fonts, dictionaries, lookup tables. The file is copied

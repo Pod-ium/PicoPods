@@ -1,4 +1,4 @@
-// picodev driver - SD / SDHC / SDXC card in SPI mode.
+// PicoPods driver - SD / SDHC / SDXC card in SPI mode.
 // From PicoCalc Writer (long busy timeouts, retries, CSD size) with PicoBoy's
 // card-detect support.
 #pragma once

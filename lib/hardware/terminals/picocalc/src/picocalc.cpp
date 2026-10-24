@@ -1,4 +1,4 @@
-// picodev terminal - ClockworkPi PicoCalc.
+// PicoPods terminal - ClockworkPi PicoCalc.
 #include "pd/terminals/picocalc.h"
 
 #include <cstdio>
@@ -52,7 +52,7 @@ Terminal& terminal_init(const TerminalConfig& cfg) {
     kc.scl = PD_PICOCALC_KBD_SCL;
     kc.hz = PD_PICOCALC_KBD_HZ;
     kc.read_gap_us = PD_PICOCALC_KBD_GAP_US;
-    if (!g_kbd.init(kc)) printf("[picodev] keyboard controller did not answer\n");
+    if (!g_kbd.init(kc)) printf("[picopods] keyboard controller did not answer\n");
 
     g_term.name_ = "PicoCalc";
     g_term.display_ = &g_lcd;

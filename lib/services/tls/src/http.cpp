@@ -192,7 +192,7 @@ bool HttpClient::open(const HttpRequest& rq0, const KeepGoing& kg, std::string* 
             head += h.first + ": " + h.second + "\r\n";
             if (strcasecmp(h.first.c_str(), "User-Agent") == 0) has_ua = true;
         }
-        if (!has_ua) head += "User-Agent: picodev\r\n";
+        if (!has_ua) head += "User-Agent: picopods\r\n";
         if (!rq.body.empty() || rq.method == "POST" || rq.method == "PUT")
             head += "Content-Length: " + std::to_string(rq.body.size()) + "\r\n";
         head += "\r\n";

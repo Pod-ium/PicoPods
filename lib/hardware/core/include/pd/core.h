@@ -1,4 +1,4 @@
-// picodev - basic types shared by every library.
+// PicoPods - basic types shared by every library.
 //
 // Nothing here depends on the Pico SDK, so the same headers compile for the
 // device and for the host (PD_HOST=1) builds.

@@ -1,4 +1,4 @@
-/* picodev: tuned FatFs configuration. Changes from the stock R0.16 file:
+/* PicoPods: tuned FatFs configuration. Changes from the stock R0.16 file:
  *   FF_LFN_UNICODE 2 (file names are UTF-8), FF_CODE_PAGE 850 (Latin-1 short names),
  *   FF_USE_STRFUNC 1 + FF_STRF_ENCODE 3 (f_gets/f_printf with UTF-8), FF_NORTC_YEAR 2026,
  *   FF_USE_CHMOD 1 (f_chmod/f_utime: file copies keep their date and attributes).

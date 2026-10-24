@@ -1,4 +1,4 @@
-// picodev - the terminal: the device the MCU board is plugged into.
+// PicoPods - the terminal: the device the MCU board is plugged into.
 //
 // A terminal bundles the peripherals an app uses (display, keyboard, storage,
 // audio, battery) behind the HAL interfaces. Each supported terminal is one

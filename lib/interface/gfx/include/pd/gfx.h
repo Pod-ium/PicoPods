@@ -1,4 +1,4 @@
-// picodev - text and shape drawing on any hal::Display.
+// PicoPods - text and shape drawing on any hal::Display.
 //
 // There is no framebuffer: every call streams pixels straight to the panel
 // through one row buffer (a few hundred bytes). Text comes from four built-in

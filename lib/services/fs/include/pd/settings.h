@@ -1,4 +1,4 @@
-// picodev - small "key=value" settings file (one pair per line), the format
+// PicoPods - small "key=value" settings file (one pair per line), the format
 // PicoCalc Writer uses for /.fwedit/settings.txt. Keys keep their order.
 //
 //   pd::Settings s;

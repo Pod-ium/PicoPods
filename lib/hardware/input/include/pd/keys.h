@@ -1,6 +1,6 @@
-// picodev - common key codes.
+// PicoPods - common key codes.
 //
-// These are the codes the PicoCalc keyboard controller sends; picodev uses
+// These are the codes the PicoCalc keyboard controller sends; PicoPods uses
 // them on every terminal (other keyboard drivers translate to them). Printable
 // ASCII keys use their ASCII code: Shift+A arrives as 'A'.
 #pragma once

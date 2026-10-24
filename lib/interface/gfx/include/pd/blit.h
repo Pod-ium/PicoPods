@@ -1,4 +1,4 @@
-// picodev - fast scaled output of an 8-bit indexed framebuffer.
+// PicoPods - fast scaled output of an 8-bit indexed framebuffer.
 //
 // Made for emulators and games (it is PicoBoy's video path, generalised): the
 // app renders into a w x h buffer of palette indices, submit() converts only

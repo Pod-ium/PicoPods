@@ -1,4 +1,4 @@
-// picodev - flash cache on RP2040 / RP2350 (PicoBoy's romstore, generalised).
+// PicoPods - flash cache on RP2040 / RP2350 (PicoBoy's romstore, generalised).
 #include <cstring>
 
 #include "hardware/flash.h"

@@ -1,4 +1,4 @@
-// picodev - operations on whole trees: copy, move and delete files and
+// PicoPods - operations on whole trees: copy, move and delete files and
 // folders, with progress, cancellation and name conflicts.
 //
 // Built on pd::fs only, so it behaves the same on the SD card and in host

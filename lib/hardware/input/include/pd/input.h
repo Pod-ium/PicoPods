@@ -1,4 +1,4 @@
-// picodev - keyboard input on top of any hal::KeyboardDevice.
+// PicoPods - keyboard input on top of any hal::KeyboardDevice.
 //
 // Two layers read the same event stream:
 //

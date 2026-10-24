@@ -1,4 +1,4 @@
-// picodev - modal UI: menus, dialogs, text input, file browser, progress.
+// PicoPods - modal UI: menus, dialogs, text input, file browser, progress.
 //
 // Every call draws a panel over whatever is on screen and blocks on the
 // keyboard; the caller repaints its own screen afterwards. Dialogs do not

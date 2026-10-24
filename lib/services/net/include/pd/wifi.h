@@ -1,4 +1,4 @@
-// picodev - Wi-Fi with a user interface: saved credentials, network picker,
+// PicoPods - Wi-Fi with a user interface: saved credentials, network picker,
 // connect-on-demand and automatic power-off (PicoCalc Writer's Wi-Fi flow).
 //
 //   pd::WifiManager wifi("/.myapp/wifi.txt");

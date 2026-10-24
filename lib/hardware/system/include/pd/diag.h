@@ -1,4 +1,4 @@
-// picodev - start-up diagnostics and crash reporting (from PicoCalc Writer).
+// PicoPods - start-up diagnostics and crash reporting (from PicoCalc Writer).
 //
 //   * an on-screen start-up log ("SD card...", "settings...")
 //   * a breadcrumb in a watchdog scratch register that survives a reset, so

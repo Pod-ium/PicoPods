@@ -1,10 +1,10 @@
-// picodev HAL - a source of raw key events.
+// PicoPods HAL - a source of raw key events.
 //
 // A driver reports what the keyboard controller reports: key code plus
 // pressed / held / released. Modifier tracking, auto-repeat and key state
 // live above it, in pd::input::Keyboard, so every terminal behaves the same.
 //
-// Key codes: picodev uses the PicoCalc keyboard codes as its common code set
+// Key codes: PicoPods uses the PicoCalc keyboard codes as its common code set
 // (see pd/keys.h). Drivers for other keyboards translate to these codes.
 #pragma once
 #include <cstdint>

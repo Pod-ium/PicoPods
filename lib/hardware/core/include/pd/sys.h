@@ -1,4 +1,4 @@
-// picodev - system services: time, sleeping, reboot, clocks, second core.
+// PicoPods - system services: time, sleeping, reboot, clocks, second core.
 //
 // Implemented by src/sys_rp2.cpp on the device and src/sys_host.cpp on a PC.
 #pragma once
@@ -32,7 +32,7 @@ bool launch_core1(void (*fn)());
 [[noreturn]] void reboot_to_bootloader();
 
 // Watchdog scratch register that survives a soft reset (index 0..7). The SDK
-// and the PicoCalc UF2 Loader use some of them: picodev only uses index 3.
+// and the PicoCalc UF2 Loader use some of them: PicoPods only uses index 3.
 uint32_t scratch(int index);
 void set_scratch(int index, uint32_t value);
 

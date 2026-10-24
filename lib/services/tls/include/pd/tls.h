@@ -1,4 +1,4 @@
-// picodev - TLS client (mbedTLS) on top of pd::net::Tcp, and a small
+// PicoPods - TLS client (mbedTLS) on top of pd::net::Tcp, and a small
 // HTTP/1.1 client that speaks http:// and https://.
 //
 // The server certificate is verified against a built-in set of public root

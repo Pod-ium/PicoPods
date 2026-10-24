@@ -1,4 +1,4 @@
-// picodev - small helpers most apps need, on top of the other libraries.
+// PicoPods - small helpers most apps need, on top of the other libraries.
 #pragma once
 #include <string>
 
