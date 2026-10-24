@@ -1,6 +1,6 @@
 # Moving PicoCalc Writer and PicoBoy onto the common libraries
 
-Both firmwares have been ported: see `apps/writer` (Writer 3.0) and `pods/podboy` (PicoBoy 1.1, now PodBoy). This is the map from their original code to the libraries, useful to follow the port or to move other PicoCalc firmware the same way.
+Both firmwares have been ported: see `pods/podwriter` (Writer 3.0, now Pod Writer) and `pods/podboy` (PicoBoy 1.1, now PodBoy). This is the map from their original code to the libraries, useful to follow the port or to move other PicoCalc firmware the same way.
 
 ## PicoCalc Writer 2.1.0
 
@@ -24,7 +24,7 @@ Both firmwares have been ported: see `apps/writer` (Writer 3.0) and `pods/podboy
 | `src/export/epub.*` | `pd_epub` (`pd::epub::`) | Unchanged API. |
 | `test/` | `tests/` | All Writer tests are in the PicoPods test suite. |
 
-What stays in the Writer: `App` (editor state, key bindings, rendering loop, status bar content, commands), the help text, and the ePub/X3 command flow.
+What stays in Pod Writer: `App` (editor state, key bindings, rendering loop, status bar content, commands), the help text, and the ePub/X3 command flow.
 
 ## PicoBoy 1.0
 

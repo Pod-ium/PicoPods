@@ -59,14 +59,15 @@ add_test(NAME demo_script COMMAND pd_demo WORKING_DIRECTORY ${_tmp})
 set_tests_properties(demo_script PROPERTIES TIMEOUT 60 ENVIRONMENT
     "PD_SDCARD=${_tmp}/demo_sd;PD_FRAMES=${_tmp}/frames;PD_KEYS=${_keys}")
 
-# PicoCalc Writer: type a document, save it, help, menu, theme, ePub export, Wi-Fi menu.
-file(MAKE_DIRECTORY ${_tmp}/writer_sd)
+# Pod Writer: type a document, save it, help, menu, theme, ePub export (tagged
+# with the pod's name), Wi-Fi menu.
+file(MAKE_DIRECTORY ${_tmp}/podwriter_sd)
 set(_wkeys "wait:200,text:# Hello PicoPods,enter,enter,text:Some *text* here.,ctrl+s,ctrl+u,text:/hello.md,enter")
 set(_wkeys "${_wkeys},f1,esc,f6,f5,esc,shot,esc,f7,enter,wait:200,f9,esc,shot")
-add_test(NAME writer_script COMMAND ${CMAKE_COMMAND} -E env
-    PD_SDCARD=${_tmp}/writer_sd PD_FRAMES=${_tmp}/writer_frames PD_KEYS=${_wkeys}
-    sh -c "rm -rf ${_tmp}/writer_sd/* ${_tmp}/writer_sd/.fwedit && $<TARGET_FILE:picocalc_writer> && test -s ${_tmp}/writer_sd/hello.md && test -s ${_tmp}/writer_sd/hello.epub")
-set_tests_properties(writer_script PROPERTIES TIMEOUT 60)
+add_test(NAME podwriter_script COMMAND ${CMAKE_COMMAND} -E env
+    PD_SDCARD=${_tmp}/podwriter_sd PD_FRAMES=${_tmp}/podwriter_frames PD_KEYS=${_wkeys}
+    sh -c "rm -rf ${_tmp}/podwriter_sd/* ${_tmp}/podwriter_sd/.fwedit && $<TARGET_FILE:podwriter> && test -s ${_tmp}/podwriter_sd/hello.md && test -s ${_tmp}/podwriter_sd/hello.epub && unzip -p ${_tmp}/podwriter_sd/hello.epub OEBPS/content.opf | grep -q 'content=\"Pod Writer\"'")
+set_tests_properties(podwriter_script PROPERTIES TIMEOUT 60)
 
 # PodBoy: starts, shows the ROM browser (no ROMs here), opens a folder.
 file(MAKE_DIRECTORY ${_tmp}/podboy_sd/roms/sub)

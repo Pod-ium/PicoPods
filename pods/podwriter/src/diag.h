@@ -1,4 +1,4 @@
-// PicoCalc Writer - start-up stages, on top of picodev's pd_diag.
+// Pod Writer - start-up stages, on top of PicoPods' pd_diag.
 #pragma once
 #include "pd/diag.h"
 

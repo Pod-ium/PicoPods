@@ -39,6 +39,7 @@ bool App::exportEpub(std::string* outPath) {
     o.kind = epub::kindForPath(docPath);
     o.author = set_.author;
     o.language = set_.lang.empty() ? "en" : set_.lang;
+    o.generator = "Pod Writer";
     const epub::Reader rd = [this](uint32_t pos, uint8_t* buf, uint32_t n) { return tb_.read(pos, buf, n); };
     std::string title = epub::guessTitle(rd, tb_.size(), o.kind, stem(docName()));
     const bool ok = pd::ui::prompt(ui_, "ePub title", title, "Enter = export   Esc = cancel");
@@ -70,7 +71,7 @@ void App::cmdExportEpub() {
 // Wi-Fi
 // ---------------------------------------------------------------------------
 
-// Wi-Fi comes from picodev's pd::WifiManager (credentials in /.fwedit/wifi.txt,
+// Wi-Fi comes from PicoPods' pd::WifiManager (credentials in /.fwedit/wifi.txt,
 // network picker, idle power-off). These wrappers repaint the editor after it.
 void App::wifiUsed() { wifi_.used(); }
 
