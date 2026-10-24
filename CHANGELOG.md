@@ -18,6 +18,12 @@ pods, assembled from PicoCalc Writer 2.1.0, PicoBoy 1.0 and picodev 1–2
   USB drive vendor/manufacturer, default Bluetooth key file
   `/.picopods/bt_keys.bin`.
 
+- UF2 Loader on RP2040: `pd_flash_cache` used the whole flash and could
+  overwrite the loader in its top 16 KB (the demo's flash test on a Pico /
+  Pico W). It now honours the loader's marker in the app's vector table and
+  leaves the top 16 KB free even without it (`pd/uf2loader.h`, host-tested).
+  The RP2350 path already stayed inside the app partition.
+
 ### Pods
 - **PodBoy 1.1** (was PicoBoy 1.1): `pods/podboy`, `podboy.uf2`. Rename only.
 - **Pod Writer 3.0.0** (was PicoCalc Writer 3.0.0): `pods/podwriter`,

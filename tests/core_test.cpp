@@ -11,6 +11,7 @@
 #include "pd/flash_cache.h"
 #include "pd/pd.h"
 #include "pd/terminals/host.h"
+#include "pd/uf2loader.h"
 
 using namespace pd;
 
@@ -223,6 +224,22 @@ static void test_flash_cache() {
     CHECK(!flash_cache::load("/missing.bin", &size, nullptr, &err) && err);
 }
 
+// RP2040 under UF2 Loader: the flash cache must end below the loader.
+static void test_uf2loader() {
+    fprintf(stderr, "[core] uf2loader\n");
+    using namespace pd::uf2loader;
+    constexpr uint32_t k2M = 2u * 1024 * 1024;
+    // Marker as the loader writes it: an XIP address (2 MB - 8 KB loader - 8 KB BT).
+    CHECK(rp2040_app_flash_end(k2M, kMagic, 0x101FC000) == k2M - 16 * 1024);
+    // The same as a plain size (what the loader's README describes).
+    CHECK(rp2040_app_flash_end(k2M, kMagic, 0x001F0000) == 0x001F0000);
+    // No marker (BOOTSEL-flashed): keep the top 16 KB free anyway.
+    CHECK(rp2040_app_flash_end(k2M, 0xFFFFFFFF, 0xFFFFFFFF) == k2M - 16 * 1024);
+    // A marker pointing past the reserved area is not trusted.
+    CHECK(rp2040_app_flash_end(k2M, kMagic, 0x10200000) == k2M - 16 * 1024);
+    CHECK(rp2040_app_flash_end(k2M, kMagic, 0) == k2M - 16 * 1024);
+}
+
 int main() {
     if (const char* sd = getenv("PD_SDCARD")) (void)!system((std::string("rm -rf '") + sd + "'").c_str());
     TerminalConfig cfg;
@@ -236,6 +253,7 @@ int main() {
     test_ui(ui);
     test_blit();
     test_flash_cache();
+    test_uf2loader();
     host::dump_frame("core_test_last.ppm");
     printf("core tests passed (%d checks)\n", g_checks);
     return 0;

@@ -5,6 +5,7 @@
 #include "pd/board.h"
 #include "pd/flash_cache.h"
 #include "pd/fs.h"
+#include "pd/uf2loader.h"
 #include "pico/flash.h"
 #include "pico/stdlib.h"
 #if PD_CHIP_RP2350
@@ -80,6 +81,11 @@ bool init(uint32_t max_bytes) {
     g_phys_base = base_sect * FLASH_SECTOR_SIZE;
     visible = size_sect * FLASH_SECTOR_SIZE;
     if (visible == 0 || visible > PICO_FLASH_SIZE_BYTES - g_phys_base) visible = PICO_FLASH_SIZE_BYTES - g_phys_base;
+#else
+    // RP2040: UF2 Loader lives in the top of the flash and says, in the app's
+    // vector table, where the app's usable flash ends (see pd/uf2loader.h).
+    const auto* info = reinterpret_cast<const volatile uint32_t*>(XIP_BASE + uf2loader::kInfoOffset);
+    visible = uf2loader::rp2040_app_flash_end(PICO_FLASH_SIZE_BYTES, info[0], info[1]);
 #endif
     const uint32_t end = visible & ~(kBlock - 1);
     g_meta_off = end - FLASH_SECTOR_SIZE;
