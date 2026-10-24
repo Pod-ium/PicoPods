@@ -1,4 +1,4 @@
-// PicoBoy - Sharp SM83 (LR35902) CPU interpreter
+// PodBoy - Sharp SM83 (LR35902) CPU interpreter
 // Timing: every memory access costs 4 T-cycles, plus explicit internal delays,
 // which reproduces the documented per-instruction cycle counts.
 #include "gb.h"

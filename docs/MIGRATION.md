@@ -1,6 +1,6 @@
 # Moving PicoCalc Writer and PicoBoy onto the common libraries
 
-Both firmwares have been ported: see `apps/writer` (Writer 3.0) and `apps/picoboy` (PicoBoy 1.1). This is the map from their original code to the libraries, useful to follow the port or to move other PicoCalc firmware the same way.
+Both firmwares have been ported: see `apps/writer` (Writer 3.0) and `pods/podboy` (PicoBoy 1.1, now PodBoy). This is the map from their original code to the libraries, useful to follow the port or to move other PicoCalc firmware the same way.
 
 ## PicoCalc Writer 2.1.0
 
