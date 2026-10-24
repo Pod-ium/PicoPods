@@ -106,12 +106,11 @@ examples/     demo/ template/ usbprobe/
 tests/        host tests (ctest) and their data
 tools/        gate.sh (merge gates), gen_fonts.py (font data)
 docs/         ARCHITECTURE, PORTING, MIGRATION, ROADMAP
-legacy/       the original standalone Writer 2.1.0 and PicoBoy 1.0 (reference)
 ```
 
 ## Status
 
-Builds cleanly for `pico2_w`, `pico2`, `pico_w` and `pico` (PicoBoy is
+Builds cleanly for `pico2_w`, `pico2`, `pico_w` and `pico` (PodBoy is
 skipped on RP2040) and for the host, where the whole test suite passes.
 The drivers come from Writer and PicoBoy code that ran on real PicoCalc
 hardware, but the ported pods have not been run on a device yet: the first

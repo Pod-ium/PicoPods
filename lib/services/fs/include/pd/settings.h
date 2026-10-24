@@ -1,5 +1,5 @@
 // PicoPods - small "key=value" settings file (one pair per line), the format
-// PicoCalc Writer uses for /.fwedit/settings.txt. Keys keep their order.
+// Pod Writer uses for /.fwedit/settings.txt. Keys keep their order.
 //
 //   pd::Settings s;
 //   s.load("/.myapp/settings.txt");
