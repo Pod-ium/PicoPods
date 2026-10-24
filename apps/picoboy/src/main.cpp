@@ -39,44 +39,10 @@ const char* const PALETTE_NAMES[] = {"DMG green", "Pocket", "Grey", "Amber"};
 int palette_idx = 0;
 int volume_setting = DEFAULT_VOLUME;
 
-// Clock for game-frame transfers only (menus always use the panel's normal
-// 25 MHz). The panel is rated for ~15 MHz, so higher speeds are an overclock:
-// "Turbo" may show garbled game graphics on some units, in which case pick a
-// lower speed. 200 MHz system clock -> SPI can do 25, 33.3 or 50 MHz.
-const char* const SPEED_NAMES[] = {"Normal", "Fast", "Turbo"};
-const uint32_t SPEED_HZ[] = {25000000, 33333333, 50000000};
-constexpr int NUM_SPEEDS = array_count(SPEED_HZ);
-int speed_idx = 1;
-
-const char* const SETTINGS_DIR = "/.picoboy";
-const char* const SETTINGS_PATH = "/.picoboy/settings.txt";
-
 Terminal* term = nullptr;
 hal::AudioOut* audio = nullptr;
 ui::Context* ui_ctx = nullptr;
 IndexedBlitter video;
-
-uint32_t stream_hz = 0;   // SPI clock really used for game frames (0 = not reported)
-
-void apply_speed() { stream_hz = term->display().set_stream_hz(SPEED_HZ[speed_idx]); }
-
-void load_settings() {
-    Settings st;
-    if (!st.load(SETTINGS_PATH)) return;
-    palette_idx = st.get_int("palette", palette_idx, 0, NUM_PALETTES - 1);
-    volume_setting = st.get_int("volume", volume_setting, 0, 100);
-    speed_idx = st.get_int("screen_speed", speed_idx, 0, NUM_SPEEDS - 1);
-}
-
-void save_settings() {
-    Settings st;
-    st.load(SETTINGS_PATH);   // keep any keys we do not know about
-    st.set_int("palette", palette_idx);
-    st.set_int("volume", volume_setting);
-    st.set_int("screen_speed", speed_idx);
-    fs::mkdirs(SETTINGS_DIR);
-    st.save(SETTINGS_PATH);
-}
 
 void set_palette(int idx) {
     Color pal[256];   // shades are 0..3; the rest repeat them, like the old "& 3"
@@ -192,25 +158,16 @@ PauseAction pause_menu(const uint8_t* bg) {
         ui::action("Controls"),
         ui::choice("Palette", &palette_idx, PALETTE_NAMES, NUM_PALETTES),
         ui::range("Volume", &volume_setting, 0, 100, 10, "%d%%"),
-        ui::choice("Screen speed", &speed_idx, SPEED_NAMES, NUM_SPEEDS),
     };
     ui::MenuOptions opt;
     opt.footer = footer;
-    opt.on_change = [](int) {
-        if (audio) audio->set_volume(volume_setting);
-        apply_speed();
-    };
+    opt.on_change = [](int) { if (audio) audio->set_volume(volume_setting); };
     ui_ctx->kbd.flush();
-    const int old_palette = palette_idx, old_volume = volume_setting, old_speed = speed_idx;
-    auto done = [&](PauseAction a) {
-        if (palette_idx != old_palette || volume_setting != old_volume || speed_idx != old_speed) save_settings();
-        return a;
-    };
     for (;;) {
         switch (ui::menu(*ui_ctx, "PAUSED", items, opt)) {
-            case -1: case 0: return done(PauseAction::RESUME);
-            case 1: return done(PauseAction::RESET);
-            case 2: return done(PauseAction::CHANGE_ROM);
+            case -1: case 0: return PauseAction::RESUME;
+            case 1: return PauseAction::RESET;
+            case 2: return PauseAction::CHANGE_ROM;
             case 3:
                 show_controls();
                 if (bg) {   // repaint the game image, then the menu reopens on top of it
@@ -243,10 +200,7 @@ uint8_t map_key(uint8_t key) {
 void draw_stats(uint32_t emu, uint32_t shown, bool audio_ok) {
     const gfx::Font& f = gfx::font(gfx::FONT_6x12);
     char s[40];
-    // e.g. "60/15 fps 33MHz": emulated frames, screen updates, SPI clock for frames
-    char mhz[12] = "";
-    if (stream_hz) snprintf(mhz, sizeof mhz, " %uMHz", unsigned((stream_hz + 500000) / 1000000));
-    snprintf(s, sizeof s, "%u/%u fps%s%s", unsigned(emu), unsigned(shown), mhz, audio_ok ? "" : " no snd");
+    snprintf(s, sizeof s, "%u/%u fps%s", unsigned(emu), unsigned(shown), audio_ok ? "" : " no snd");
     gfx::text(112, 2, 24 * f.w, f, s, 0x606870, 0x000000);
 }
 
@@ -264,11 +218,6 @@ void run_game() {
     uint64_t next_frame = sys::now_us();
     uint32_t next_stats = sys::now_ms() + 1000;
     uint32_t emu_frames = 0, shown_frames = 0, stats_emu = 0, stats_shown = 0;
-    // Even pacing: a frame is sent only after as many emulated frames as the
-    // previous transfer took, so motion advances in equal steps instead of an
-    // irregular 5-6-5-6 rhythm. Small updates take one frame and are not slowed.
-    uint32_t submit_frame = 0, xfer_frames = 1;
-    bool xfer_open = false;
 
     set_palette(palette_idx);
     memset(framebuf, 0, sizeof framebuf);
@@ -319,9 +268,6 @@ void run_game() {
             memset(latch, 0, sizeof latch);
             video.invalidate();
             if (last_shown >= 0) video.submit(framebuf[last_shown]);
-            submit_frame = emu_frames;
-            xfer_open = video.busy();
-            xfer_frames = 1;
             next_frame = sys::now_us();
             continue;
         }
@@ -337,12 +283,7 @@ void run_game() {
         gbx.set_framebuffer(framebuf[w]);
         gbx.run_frame();
         emu_frames++;
-        const bool vbusy = video.busy();
-        if (!vbusy && xfer_open) {   // the previous frame just finished
-            xfer_frames = emu_frames - submit_frame;
-            xfer_open = false;
-        }
-        if (!vbusy && emu_frames - submit_frame >= xfer_frames) {
+        if (!video.busy()) {
             // Between two screen frames the LCD is free: refresh the status readout
             if (sys::reached(next_stats)) {
                 draw_stats(emu_frames - stats_emu, shown_frames - stats_shown, audio_ok);
@@ -351,9 +292,6 @@ void run_game() {
                 next_stats = sys::now_ms() + 1000;
             }
             video.submit(framebuf[w]);
-            submit_frame = emu_frames;
-            xfer_open = video.busy();
-            if (!xfer_open) xfer_frames = 1;   // nothing changed / tiny update
             last_shown = w;
             w ^= 1;
             shown_frames++;
@@ -417,9 +355,6 @@ int main() {
     sys::sleep_ms(1500);
 
     app::mount_storage(ui);
-    load_settings();
-    if (audio) audio->set_volume(volume_setting);
-    apply_speed();
     if (!fs::is_dir(ROM_DIR)) cur_dir = "/";
 
     std::string select;

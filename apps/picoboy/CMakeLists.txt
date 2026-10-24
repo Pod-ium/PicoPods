@@ -14,7 +14,7 @@ picodev_add_app(picoboy
         src/gb/apu.cpp
     LIBS pd_flash_cache
     TITLE "PicoBoy"
-    VERSION "1.2")
+    VERSION "1.1")
 target_include_directories(picoboy PRIVATE src)
 target_compile_options(picoboy PRIVATE -O2)
 if(NOT PD_HOST)

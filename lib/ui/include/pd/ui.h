@@ -52,6 +52,9 @@ struct Context {
     // Called about every millisecond while a dialog waits for a key, so
     // background work keeps running (Wi-Fi polling, audio refill...).
     std::function<void()> idle;
+    // Set (from idle()) after drawing over the screen: the dialog waiting in
+    // wait_key() receives key::Repaint and redraws itself completely.
+    bool repaint = false;
 
     Context(input::Keyboard& k, const Theme& t) : kbd(k), th(&t) {}
     // Waits for a key, running idle() meanwhile. Dialogs use this.
@@ -59,6 +62,12 @@ struct Context {
         input::KeyEvent ev;
         while (!kbd.poll(ev)) {
             if (idle) idle();
+            if (repaint) {
+                repaint = false;
+                ev = input::KeyEvent();
+                ev.code = key::Repaint;
+                return ev;
+            }
             sys::sleep_ms(1);
         }
         return ev;

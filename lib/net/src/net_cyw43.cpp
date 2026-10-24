@@ -61,12 +61,29 @@ int scanResult(void* env, const cyw43_ev_scan_result_t* r) {
 
 }  // namespace
 
-bool start(std::string* err) {
-    if (g_on) return true;
-    if (cyw43_arch_init_with_country(CYW43_COUNTRY_WORLDWIDE) != 0) {
-        if (err) *err = "Wi-Fi chip did not start";
+// The CYW43 chip carries Wi-Fi and Bluetooth: each user holds it, and it
+// powers down only when nobody does.
+int g_holds = 0;
+
+bool radio_acquire(std::string* err) {
+    if (g_holds == 0 && cyw43_arch_init_with_country(CYW43_COUNTRY_WORLDWIDE) != 0) {
+        if (err) *err = "radio chip did not start";
         return false;
     }
+    ++g_holds;
+    return true;
+}
+
+void radio_release() {
+    if (g_holds == 0) return;
+    if (--g_holds == 0) cyw43_arch_deinit();
+}
+
+bool radio_on() { return g_holds > 0; }
+
+bool start(std::string* err) {
+    if (g_on) return true;
+    if (!radio_acquire(err)) return false;
     cyw43_arch_enable_sta_mode();
     g_on = true;
     return true;
@@ -75,14 +92,14 @@ bool start(std::string* err) {
 void stop() {
     if (!g_on) return;
     cyw43_arch_disable_sta_mode();
-    cyw43_arch_deinit();
     g_on = false;
+    radio_release();
 }
 
 bool is_on() { return g_on; }
 
 void poll() {
-    if (g_on) cyw43_arch_poll();
+    if (g_holds) cyw43_arch_poll();
 }
 
 bool scan(std::vector<Network>& out, const KeepGoing& keepGoing, std::string* err) {

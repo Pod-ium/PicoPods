@@ -176,8 +176,26 @@ bool SdSpi::read(uint32_t sector, uint8_t* buff, uint32_t count) {
     return false;
 }
 
+bool SdSpi::write_multi(uint32_t sector, const uint8_t* buff, uint32_t count) {
+    // CMD25 + one 0xFC token per block + stop token: the card programs whole
+    // blocks in one go instead of waiting after every sector.
+    bool ok = command(25, high_cap_ ? sector : sector * 512) == 0;
+    for (uint32_t i = 0; ok && i < count; ++i) ok = write_data(buff + i * 512, 0xFC);
+    // Always send the stop token so the card leaves receive-data state.
+    // The card may take one byte before it signals busy after the token.
+    bool stopped = wait_ready(kBusyMs);
+    xfer(0xFD);
+    xfer(0xFF);
+    stopped = wait_ready(kBusyMs) && stopped;
+    deselect();
+    return ok && stopped;
+}
+
 bool SdSpi::write(uint32_t sector, const uint8_t* buff, uint32_t count) {
     if (!ready_) return false;
+    if (count > 1 && write_multi(sector, buff, count)) return true;
+    // Single-block writes: also the fallback if a multi-block write failed
+    // (the same data is simply written again).
     for (uint32_t i = 0; i < count; ++i) {
         const uint32_t s = sector + i;
         bool ok = false;

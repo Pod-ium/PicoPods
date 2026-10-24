@@ -83,6 +83,11 @@ bool remove(const char* path);
 bool rename(const char* from, const char* to);
 bool mkdir(const char* path);    // true if it exists afterwards
 bool mkdirs(const char* path);   // creates missing parents too
+// Copies the timestamp and the read-only/hidden/system/archive attributes of
+// `from` to `to` (a file copy keeps its date). False if unsupported.
+bool copy_metadata(const char* from, const char* to);
+// Clears the read-only attribute, so remove() and overwriting work.
+bool make_writable(const char* path);
 // Lists a folder (never "." or ".."). Hidden entries (dot names, and FAT
 // hidden/system attributes on the device) are skipped unless include_hidden.
 bool list_dir(const char* path, std::vector<DirEntry>& out, size_t max_entries,

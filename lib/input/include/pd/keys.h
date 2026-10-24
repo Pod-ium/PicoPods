@@ -18,6 +18,9 @@ constexpr uint8_t F6 = 0x86, F7 = 0x87, F8 = 0x88, F9 = 0x89, F10 = 0x90;
 // Modifiers: tracked by pd::input::Keyboard, never returned by poll().
 constexpr uint8_t Alt = 0xA1, ShiftL = 0xA2, ShiftR = 0xA3, Sym = 0xA4, Ctrl = 0xA5;
 constexpr uint8_t CapsLock = 0xC1;
+// Not a key: returned by ui::Context::wait_key() after background work drew
+// over the screen (a dialog opened from idle()), so the waiting dialog redraws.
+constexpr uint8_t Repaint = 0xFE;
 
 constexpr bool is_function(uint8_t c) { return (c >= F1 && c <= F9) || c == F10; }
 constexpr bool is_modifier(uint8_t c) {

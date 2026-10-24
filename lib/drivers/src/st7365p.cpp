@@ -100,12 +100,6 @@ void St7365p::begin(int x0, int y0, int x1, int y1) {
 void St7365p::write(const uint8_t* data, size_t bytes) { send(data, bytes); }
 
 void St7365p::write_async(const uint8_t* data, size_t bytes) {
-    // The window commands went out at the normal clock (spi_write_blocking has
-    // finished shifting), so the clock can be raised for the pixel stream.
-    if (stream_hz_ && !fast_) {
-        spi_set_baudrate(cfg_.spi, stream_hz_);
-        fast_ = true;
-    }
     dma_channel_set_read_addr(dma_, data, false);
     dma_channel_set_trans_count(dma_, bytes, true);
 }
@@ -120,24 +114,7 @@ void St7365p::end() {
     while (spi_is_busy(cfg_.spi)) tight_loop_contents();
     while (spi_is_readable(cfg_.spi)) (void)spi_get_hw(cfg_.spi)->dr;
     spi_get_hw(cfg_.spi)->icr = SPI_SSPICR_RORIC_BITS;
-    if (fast_) {
-        spi_set_baudrate(cfg_.spi, cfg_.hz);
-        fast_ = false;
-    }
     cs_high();
-}
-
-uint32_t St7365p::set_stream_hz(uint32_t hz) {
-    if (in_data_) end();
-    if (hz == 0 || hz == cfg_.hz) {
-        stream_hz_ = 0;
-        return spi_get_baudrate(cfg_.spi);
-    }
-    // Find the clock the SPI divider really gives, then go back to normal.
-    const uint32_t actual = spi_set_baudrate(cfg_.spi, hz);
-    spi_set_baudrate(cfg_.spi, cfg_.hz);
-    stream_hz_ = actual;
-    return actual;
 }
 
 void St7365p::fill(int x, int y, int w, int h, Color color) {

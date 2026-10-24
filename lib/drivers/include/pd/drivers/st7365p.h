@@ -33,7 +33,6 @@ public:
     bool busy() override;
     void end() override;
     void fill(int x, int y, int w, int h, Color c) override;
-    uint32_t set_stream_hz(uint32_t hz) override;
 
     int dma_channel() const { return dma_; }
 
@@ -49,8 +48,6 @@ private:
     Config cfg_;
     bool in_data_ = false;
     int dma_ = -1;
-    uint32_t stream_hz_ = 0;   // 0: DMA transfers use cfg_.hz
-    bool fast_ = false;        // SPI currently at stream_hz_
 };
 
 }  // namespace pd::drivers

@@ -25,6 +25,12 @@ struct Network {
     bool secure;  // needs a password
 };
 
+// The radio chip (CYW43: Wi-Fi + Bluetooth). Each user holds it; it powers
+// down when the last hold is released. start()/stop() hold it for Wi-Fi.
+bool radio_acquire(std::string* err);
+void radio_release();
+bool radio_on();
+
 bool start(std::string* err);  // powers the radio up (station mode)
 void stop();                   // powers it down
 bool is_on();

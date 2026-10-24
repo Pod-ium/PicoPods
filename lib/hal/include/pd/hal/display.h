@@ -37,11 +37,6 @@ public:
     // busy() returns false. Drivers without DMA fall back to write().
     virtual void write_async(const uint8_t* data, size_t bytes) { write(data, bytes); }
     virtual bool busy() { return false; }
-    // Clock for background (write_async) transfers only; 0 = same as normal
-    // drawing. Lets an emulator stream frames faster than the panel's safe
-    // speed while menus and text keep using it. Returns the clock actually
-    // used (0 if the driver has no separate stream clock).
-    virtual uint32_t set_stream_hz(uint32_t hz) { (void)hz; return 0; }
     // Waits for any transfer in progress, then closes the window.
     virtual void end() = 0;
 

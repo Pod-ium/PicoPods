@@ -12,6 +12,9 @@ bool none(std::string* err) {
 
 bool start(std::string* err) { return none(err); }
 void stop() {}
+bool radio_acquire(std::string* err) { return none(err); }
+void radio_release() {}
+bool radio_on() { return false; }
 bool is_on() { return false; }
 void poll() {}
 bool scan(std::vector<Network>& out, const KeepGoing&, std::string* err) {

@@ -36,6 +36,7 @@ private:
     uint8_t command(uint8_t cmd, uint32_t arg);
     bool read_data(uint8_t* buf, uint32_t n);
     bool write_data(const uint8_t* buf, uint8_t token);
+    bool write_multi(uint32_t sector, const uint8_t* buf, uint32_t count);
 
     Config cfg_;
     bool pins_ = false;

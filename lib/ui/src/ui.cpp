@@ -168,8 +168,11 @@ int menu(Context& ui, const char* title, const MenuItem* items, int n, const Men
     const int visible = std::min(n, max_rows);
     const int h = (visible + 1) * f.h + 12 + footer_h;
     const int y0 = (H() - h) / 2;
-    panel(ui, y0, h, title);
-    if (opt.footer) line(ui, y0 + 8 + (visible + 1) * f.h, opt.footer, Tone::Dim);
+    auto frame = [&]() {
+        panel(ui, y0, h, title);
+        if (opt.footer) line(ui, y0 + 8 + (visible + 1) * f.h, opt.footer, Tone::Dim);
+    };
+    frame();
 
     int sel = std::max(0, std::min(n - 1, opt.initial));
     for (int g = 0; g < n && !items[sel].enabled; ++g) sel = (sel + 1) % n;
@@ -184,7 +187,9 @@ int menu(Context& ui, const char* title, const MenuItem* items, int n, const Men
         }
         const KeyEvent k = ui.wait_key();
         const MenuItem& cur = items[sel];
-        if (k.code == key::Up || k.code == key::Down) {
+        if (k.code == key::Repaint) {
+            frame();
+        } else if (k.code == key::Up || k.code == key::Down) {
             const int d = k.code == key::Up ? -1 : 1;
             int s = sel;
             for (int g = 0; g < n; ++g) {
@@ -225,10 +230,12 @@ void message(Context& ui, const char* title, const std::vector<std::string>& in,
     if (int(lines.size()) > max_lines) lines.resize(size_t(max_lines));
     const int h = (int(lines.size()) + 3) * f.h + 12;
     const int y0 = (H() - h) / 2;
-    panel(ui, y0, h, title);
-    for (size_t i = 0; i < lines.size(); ++i) line(ui, y0 + 8 + int(i + 1) * f.h, lines[i], Tone::Normal, color);
-    line(ui, y0 + 8 + int(lines.size() + 2) * f.h, "Press any key", Tone::Dim);
-    ui.wait_key();
+    for (;;) {
+        panel(ui, y0, h, title);
+        for (size_t i = 0; i < lines.size(); ++i) line(ui, y0 + 8 + int(i + 1) * f.h, lines[i], Tone::Normal, color);
+        line(ui, y0 + 8 + int(lines.size() + 2) * f.h, "Press any key", Tone::Dim);
+        if (ui.wait_key().code != key::Repaint) return;
+    }
 }
 
 int ask(Context& ui, const char* title, const std::string& text, bool allow_cancel) {
@@ -237,12 +244,19 @@ int ask(Context& ui, const char* title, const std::string& text, bool allow_canc
     if (lines.size() > 10) lines.resize(10);
     const int h = (int(lines.size()) + 3) * f.h + 12;
     const int y0 = (H() - h) / 2;
-    panel(ui, y0, h, title);
-    for (size_t i = 0; i < lines.size(); ++i) line(ui, y0 + 8 + int(i + 1) * f.h, lines[i]);
-    line(ui, y0 + 8 + int(lines.size() + 2) * f.h, allow_cancel ? "[Y]es  [N]o  [Esc] cancel" : "[Y]es  [N]o",
-         Tone::Dim);
+    auto draw = [&]() {
+        panel(ui, y0, h, title);
+        for (size_t i = 0; i < lines.size(); ++i) line(ui, y0 + 8 + int(i + 1) * f.h, lines[i]);
+        line(ui, y0 + 8 + int(lines.size() + 2) * f.h, allow_cancel ? "[Y]es  [N]o  [Esc] cancel" : "[Y]es  [N]o",
+             Tone::Dim);
+    };
+    draw();
     for (;;) {
         const KeyEvent k = ui.wait_key();
+        if (k.code == key::Repaint) {
+            draw();
+            continue;
+        }
         if (k.code == 'y' || k.code == 'Y' || k.code == key::Enter) return 1;
         if (k.code == 'n' || k.code == 'N') return 0;
         if (k.code == key::Esc || k.code == key::Backspace) return allow_cancel ? -1 : 0;
@@ -255,11 +269,18 @@ bool confirm(Context& ui, const char* title, const std::string& question) {
     if (lines.size() > 10) lines.resize(10);
     const int h = (int(lines.size()) + 3) * f.h + 12;
     const int y0 = (H() - h) / 2;
-    panel(ui, y0, h, title);
-    for (size_t i = 0; i < lines.size(); ++i) line(ui, y0 + 8 + int(i + 1) * f.h, lines[i]);
-    line(ui, y0 + 8 + int(lines.size() + 2) * f.h, "Enter: yes    Esc: no", Tone::Dim);
+    auto draw = [&]() {
+        panel(ui, y0, h, title);
+        for (size_t i = 0; i < lines.size(); ++i) line(ui, y0 + 8 + int(i + 1) * f.h, lines[i]);
+        line(ui, y0 + 8 + int(lines.size() + 2) * f.h, "Enter: yes    Esc: no", Tone::Dim);
+    };
+    draw();
     for (;;) {
         const KeyEvent k = ui.wait_key();
+        if (k.code == key::Repaint) {
+            draw();
+            continue;
+        }
         if (k.code == key::Enter || k.code == 'y' || k.code == 'Y') return true;
         if (k.code == key::Esc || k.code == key::Backspace || k.code == 'n' || k.code == 'N') return false;
     }
@@ -270,9 +291,12 @@ bool prompt(Context& ui, const char* title, std::string& value, const char* hint
     const Font& f = ui.font();
     const int h = 4 * f.h + 12;
     const int y0 = (H() - h) / 3;
-    panel(ui, y0, h, title);
-    line(ui, y0 + 8 + 3 * f.h - f.h / 2, hint ? hint : (mask ? "Enter OK  Tab show  Esc cancel" : "Enter = OK   Esc = cancel"),
-         Tone::Dim);
+    auto frame = [&]() {
+        panel(ui, y0, h, title);
+        line(ui, y0 + 8 + 3 * f.h - f.h / 2,
+             hint ? hint : (mask ? "Enter OK  Tab show  Esc cancel" : "Enter = OK   Esc = cancel"), Tone::Dim);
+    };
+    frame();
     std::string s = value;
     size_t cur = s.size();
     int scroll = 0;
@@ -287,6 +311,10 @@ bool prompt(Context& ui, const char* title, std::string& value, const char* hint
         gfx::text(inner_x(), y0 + 6 + int(1.5 * f.h), inner_w(), f, gfx::pad_cells(vis, cells), t.fg, t.bg,
                   cur_cell - scroll, t.cursor);
         const KeyEvent ev = ui.wait_key();
+        if (ev.code == key::Repaint) {
+            frame();
+            continue;
+        }
         if (ev.code == key::Enter) {
             value = s;
             return true;
@@ -376,9 +404,13 @@ void text_view(Context& ui, const char* title, const std::vector<std::string>& i
     const int rows = (H() - top_y - f.h - 6) / f.h;
     const int n = int(lines.size());
     int top = 0;
-    gfx::fill(0, 0, W(), H(), t.panel_bg);
-    if (title) gfx::text(6, 4, W() - 12, f, title, t.accent, t.panel_bg);
+    bool full = true;
     for (;;) {
+        if (full) {
+            gfx::fill(0, 0, W(), H(), t.panel_bg);
+            if (title) gfx::text(6, 4, W() - 12, f, title, t.accent, t.panel_bg);
+            full = false;
+        }
         for (int i = 0; i < rows; ++i) {
             const int idx = top + i;
             gfx::text(6, top_y + i * f.h, W() - 12, f, gfx::pad_cells(idx < n ? lines[size_t(idx)] : "", cells),
@@ -390,6 +422,10 @@ void text_view(Context& ui, const char* title, const std::vector<std::string>& i
         gfx::text(6, H() - f.h - 4, W() - 12, f, gfx::pad_cells(foot, cells), t.dim, t.panel_bg);
         const KeyEvent k = ui.wait_key();
         const int max_top = std::max(0, n - rows);
+        if (k.code == key::Repaint) {
+            full = true;
+            continue;
+        }
         if (k.code == key::Esc || k.code == key::Enter || k.code == key::Backspace) return;
         if (k.code == key::Up) top = std::max(0, top - 1);
         else if (k.code == key::Down) top = std::min(max_top, top + 1);
@@ -501,6 +537,11 @@ bool browse(Context& ui, const char* title, std::string& dir, std::string& out, 
             drawn_top = top;
 
             const KeyEvent k = ui.wait_key();
+            if (k.code == key::Repaint) {   // full redraw: re-list in place
+                if (sel < n) want = entries[size_t(sel)].name;
+                reload = true;
+                continue;
+            }
             if (k.code == key::Esc && opt.allow_cancel) return false;
             if (k.code == key::Backspace || k.code == key::Left) {
                 if (dir != "/") {

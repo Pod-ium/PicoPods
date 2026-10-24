@@ -1,7 +1,9 @@
-# pd_fs: file system (FatFs on the device, POSIX on the host), paths, settings.
+# pd_fs: file system (FatFs on the device, POSIX on the host), paths, settings,
+# tree operations (copy / move / delete).
 add_library(pd_fs INTERFACE)
 target_include_directories(pd_fs INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
-target_sources(pd_fs INTERFACE ${CMAKE_CURRENT_LIST_DIR}/src/fs_common.cpp)
+target_sources(pd_fs INTERFACE ${CMAKE_CURRENT_LIST_DIR}/src/fs_common.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/fs_ops.cpp)
 target_link_libraries(pd_fs INTERFACE pd_hal pd_core)
 if(PD_HOST)
     target_sources(pd_fs INTERFACE ${CMAKE_CURRENT_LIST_DIR}/src/fs_posix.cpp)

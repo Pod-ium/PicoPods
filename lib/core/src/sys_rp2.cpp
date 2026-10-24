@@ -35,14 +35,9 @@ bool set_clock_khz(uint32_t khz) {
         vreg_set_voltage(VREG_VOLTAGE_1_15);
         ::sleep_ms(10);
     }
-    if (!set_sys_clock_khz(khz, false)) return false;
-    // By default the SDK moves clk_peri to the 48 MHz USB clock when the system
-    // PLL changes, which caps every SPI at 24 MHz. Keep it on clk_sys instead
-    // (the SDK's PICO_CLOCK_ADJUST_PERI_CLOCK_WITH_SYS_CLOCK behaviour), so the
-    // LCD can really run at 25/33/50 MHz. SPI/I2C/UART dividers are computed
+    // clk_peri follows clk_sys, so SPI/I2C/UART dividers must be recomputed
     // after this call (the drivers do it in their init()).
-    clock_configure_undivided(clk_peri, 0, CLOCKS_CLK_PERI_CTRL_AUXSRC_VALUE_CLK_SYS, clock_get_hz(clk_sys));
-    return true;
+    return set_sys_clock_khz(khz, false);
 }
 
 uint32_t clock_khz() { return clock_get_hz(clk_sys) / 1000; }

@@ -35,7 +35,7 @@ graph TD
 
 Rules that keep the layers honest:
 
-- Only `pd_drivers`, `pd_terminal_*`, `pd_core`, `pd_net` (CYW43 backend), `pd_fs` (FatFs backend), `pd_flash_cache` and `pd_diag` include Pico SDK headers. Everything else is plain C++17 and compiles on a PC.
+- Only `pd_drivers`, `pd_terminal_*`, `pd_core`, `pd_net` (CYW43 backend), `pd_fs` (FatFs backend), `pd_usb_drive` (TinyUSB backend), `pd_flash_cache` and `pd_diag` include Pico SDK headers. Everything else is plain C++17 and compiles on a PC.
 - Libraries above the HAL take a HAL object or use the terminal passed in; they do not know which driver is behind it.
 - Drivers take all pins and buses in a `Config` struct. A driver is reusable by any terminal that has the same chip.
 - The terminal is the only place where pins are written down.

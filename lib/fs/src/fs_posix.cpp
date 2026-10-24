@@ -1,5 +1,6 @@
 // pd::fs on POSIX (host build). Based on PicoCalc Writer's test/storage_host.cpp.
 #include <dirent.h>
+#include <sys/time.h>
 #include <sys/stat.h>
 #include <sys/statvfs.h>
 #include <unistd.h>
@@ -143,6 +144,24 @@ bool is_dir(const char* p) {
 bool remove(const char* p) { return ::remove(host(p).c_str()) == 0 || fail(); }
 bool rename(const char* a, const char* b) { return ::rename(host(a).c_str(), host(b).c_str()) == 0 || fail(); }
 bool mkdir(const char* p) { return ::mkdir(host(p).c_str(), 0755) == 0 || is_dir(p) || fail(); }
+
+bool copy_metadata(const char* from, const char* to) {
+    struct stat st;
+    if (::stat(host(from).c_str(), &st) != 0) return fail();
+    struct timeval tv[2];
+    tv[0].tv_sec = st.st_atime;
+    tv[0].tv_usec = 0;
+    tv[1].tv_sec = st.st_mtime;
+    tv[1].tv_usec = 0;
+    if (::utimes(host(to).c_str(), tv) != 0) return fail();
+    return ::chmod(host(to).c_str(), st.st_mode & 07777) == 0 || fail();
+}
+
+bool make_writable(const char* p) {
+    struct stat st;
+    if (::stat(host(p).c_str(), &st) != 0) return fail();
+    return ::chmod(host(p).c_str(), st.st_mode | S_IWUSR) == 0 || fail();
+}
 
 bool list_dir(const char* path, std::vector<DirEntry>& out, size_t max_entries, bool include_hidden) {
     DIR* d = opendir(host(path).c_str());

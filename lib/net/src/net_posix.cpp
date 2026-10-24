@@ -30,6 +30,9 @@ const char* env(const char* k, const char* d) {
 
 bool start(std::string*) { g_on = true; return true; }
 void stop() { g_on = false; g_conn = false; }
+bool radio_acquire(std::string*) { return true; }
+void radio_release() {}
+bool radio_on() { return true; }
 bool is_on() { return g_on; }
 void poll() {}
 

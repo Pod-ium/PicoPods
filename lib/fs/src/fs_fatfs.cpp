@@ -171,6 +171,18 @@ bool mkdir(const char* path) {
     return false;
 }
 
+bool copy_metadata(const char* from, const char* to) {
+    FILINFO fi;
+    if (!check(f_stat(from, &fi))) return false;
+    const BYTE mask = AM_RDO | AM_HID | AM_SYS | AM_ARC;
+    // Timestamp first: f_utime on a read-only file is allowed, but keep the
+    // order obvious.
+    if (!check(f_utime(to, &fi))) return false;
+    return check(f_chmod(to, fi.fattrib & mask, mask));
+}
+
+bool make_writable(const char* path) { return check(f_chmod(path, 0, AM_RDO)); }
+
 bool list_dir(const char* path, std::vector<DirEntry>& out, size_t max_entries, bool include_hidden) {
     DIR dir;
     if (!check(f_opendir(&dir, path))) return false;
