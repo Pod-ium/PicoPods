@@ -14,7 +14,7 @@ include(cmake/picopods.cmake)
 
 add_subdirectory(apps/template)
 add_subdirectory(apps/demo)
-add_subdirectory(apps/picoboy)
+add_subdirectory(pods/podboy)
 add_subdirectory(apps/writer)
 add_subdirectory(apps/files)
 add_subdirectory(apps/usbprobe)
