@@ -52,7 +52,7 @@ int main() {
 #endif
         if (pd::sys::reached(next_print)) {
             next_print = now + 1000;
-            printf("picodev USB probe: hello %lu\n", (unsigned long)n++);
+            printf("PicoPods USB probe: hello %lu\n", (unsigned long)n++);
         }
         if (!pd::sys::reached(next_draw)) {
             pd::sys::sleep_ms(5);

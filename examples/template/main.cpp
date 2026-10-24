@@ -1,4 +1,4 @@
-// picodev app template - copy this folder to start a new firmware.
+// PicoPods pod template - copy this folder to start a new pod.
 //
 // What it shows: bringing the terminal up, the start-up log, mounting the SD
 // card, settings that survive a reboot, a main loop that redraws only when
@@ -44,7 +44,7 @@ void draw(pd::ui::Context& ui, const State& s, pd::app::StatusBar& bar) {
     pd::gfx::clear(t.bg);
     bar.draw(t, "Template", "Esc menu", true);
     int y = bar.height() + 20;
-    pd::gfx::text(16, y, 0, f, "Hello from picodev!", t.accent, t.bg);
+    pd::gfx::text(16, y, 0, f, "Hello from PicoPods!", t.accent, t.bg);
     y += 2 * f.h;
     pd::gfx::text(16, y, 0, f, "Space: count   Enter: open a file", t.fg, t.bg);
     y += 2 * f.h;

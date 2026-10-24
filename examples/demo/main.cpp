@@ -1,4 +1,4 @@
-// picodev demo - a tour of the libraries, and a quick hardware check for a new
+// PicoPods demo - a tour of the libraries, and a quick hardware check for a new
 // board or terminal: keyboard, display, audio, SD card, flash, Wi-Fi.
 #include <algorithm>
 #include <cmath>
@@ -270,7 +270,7 @@ void system_info(ui::Context& ui) {
 }  // namespace
 
 int main() {
-    diag::begin("picodev demo", PD_APP_VERSION, kStages, array_count(kStages));
+    diag::begin("PicoPods demo", PD_APP_VERSION, kStages, array_count(kStages));
     TerminalConfig cfg;
     cfg.clock_khz = board::fast_clock_khz();
     Terminal& term = terminal_init(cfg);
@@ -286,8 +286,8 @@ int main() {
     diag::stage(3);
     diag::done();
 #if PD_DEMO_WIFI
-    WifiManager wifi("/.picodev/wifi.txt");
-    fs::mkdirs("/.picodev");
+    WifiManager wifi("/.picopods/wifi.txt");
+    fs::mkdirs("/.picopods");
     wifi.load();
     ui.idle = [&] { wifi.tick(); };   // keeps lwIP running and powers the radio down when idle
 #endif
@@ -314,9 +314,9 @@ int main() {
 #endif
         ui::MenuOptions opt;
         opt.initial = last;
-        opt.footer = "picodev " PD_APP_VERSION;
+        opt.footer = "PicoPods " PD_APP_VERSION;
         opt.on_change = [&](int) { ui.th = &ui::theme(theme); };
-        app::splash(ui.theme(), "picodev", "library demo");
+        app::splash(ui.theme(), "PicoPods", "library demo");
         const int r = ui::menu(ui, "DEMO", items, opt);
         if (r >= 0) last = r;
         switch (r) {

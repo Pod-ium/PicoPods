@@ -15,12 +15,13 @@ PicoPods is one tree with two parts:
 | **PodBoy** 1.1 | [`pods/podboy`](pods/podboy) | Game Boy (DMG) emulator. Needs an RP2350 |
 | **Pod Writer** 3.0 | [`pods/podwriter`](pods/podwriter) | Text editor: files larger than RAM (SD-backed), undo, syntax colours, ePub export |
 | **Pod Files** 1.3 | [`pods/podfiles`](pods/podfiles) | File manager: copy / move / delete, Bluetooth, Git clone, USB drive mode |
-| `pd_demo` | `apps/demo` | Tour of the libraries and hardware check |
-| `pd_template` | `apps/template` | Skeleton to copy for a new pod |
-| `pd_usbprobe` | `apps/usbprobe` | Check of the Pico's micro-USB port |
 
-The pods are being renamed and moved to `pods/` (PodBoy, Pod Writer,
-Pod Files): see [`docs/ROADMAP.md`](docs/ROADMAP.md).
+Examples (`examples/`): `pd_demo` (tour of the libraries and hardware
+check), `pd_template` (skeleton to copy for a new pod) and `pd_usbprobe`
+(check of the Pico's micro-USB port).
+
+How the tree was assembled from the original firmwares, milestone by
+milestone: [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Build
 
@@ -28,7 +29,7 @@ Pod Files): see [`docs/ROADMAP.md`](docs/ROADMAP.md).
 # Firmware for PicoCalc + Pico 2 W (default)
 cmake -B build -DPICO_SDK_PATH=/path/to/pico-sdk
 cmake --build build -j
-# -> build/pods/<pod>/<pod>.uf2 (and build/apps/... until M3 is done)
+# -> build/pods/<pod>/<pod>.uf2, build/examples/<example>/<example>.uf2
 
 # Other boards
 cmake -B build-pico -DPD_BOARD=pico        # also pico_w, pico2, or any Pico SDK board name
@@ -51,7 +52,7 @@ and go through its keyboard, colour, audio and flash-cache screens.
 
 ## Write a pod
 
-Copy `apps/template`, rename it and add it to the top-level `CMakeLists.txt`:
+Copy `examples/template` to `pods/<name>`, rename it and add it to the top-level `CMakeLists.txt`:
 
 ```cmake
 picopods_add_pod(my_pod
@@ -100,7 +101,8 @@ picopods_add_pod(my_pod SOURCES main.cpp)
 ```
 cmake/        picopods_init.cmake (before project), picopods.cmake (after project)
 lib/          common libraries, by layer: hardware/ services/ interface/ content/
-apps/         the pods and examples (moving to pods/ and examples/)
+pods/         podboy/ podwriter/ podfiles/
+examples/     demo/ template/ usbprobe/
 tests/        host tests (ctest) and their data
 tools/        gate.sh (merge gates), gen_fonts.py (font data)
 docs/         ARCHITECTURE, PORTING, MIGRATION, ROADMAP

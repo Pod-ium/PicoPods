@@ -5,7 +5,7 @@ endif()
 picopods_add_pod(pd_demo
     SOURCES main.cpp
     LIBS ${_libs}
-    TITLE "picodev demo"
+    TITLE "PicoPods demo"
     VERSION "0.1")
 if(PD_HAS_WIFI)
     target_compile_definitions(pd_demo PRIVATE PD_DEMO_WIFI=1)
