@@ -39,8 +39,13 @@ if [ "$what" = fw ] || [ "$what" = all ]; then
         echo "== G-fw ($b)"
         step "$out/fw-$b-configure.log" cmake -S "$root" -B "$out/fw-$b" -DPD_BOARD="$b"
         # list only what this build produces, not leftovers of moved pods
-        # (the .uf2 is written after linking: drop the .elf too to relink)
-        find "$out/fw-$b" \( -name '*.uf2' -o -name '*.elf' \) -delete
+        # (the .uf2 is written after linking: drop the .elf too to relink).
+        # Only firmware folders: _deps holds prebuilt .elf files of picotool.
+        for d in pods examples apps; do
+            if [ -d "$out/fw-$b/$d" ]; then
+                find "$out/fw-$b/$d" \( -name '*.uf2' -o -name '*.elf' \) -delete
+            fi
+        done
         step "$out/fw-$b-build.log" cmake --build "$out/fw-$b" -j "$jobs"
         (cd "$out/fw-$b" && find . -name '*.uf2' | sed 's|^\./||' | sort)
     done

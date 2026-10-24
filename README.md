@@ -1,5 +1,7 @@
 # PicoPods
 
+[![CI](https://github.com/lando1784/PicoPods/actions/workflows/ci.yml/badge.svg)](https://github.com/lando1784/PicoPods/actions/workflows/ci.yml)
+
 Firmware for the **ClockworkPi PicoCalc** with a Raspberry Pi **Pico 2 W**.
 
 PicoPods is one tree with two parts:
@@ -46,7 +48,8 @@ Needs Pico SDK 2.1.x, `arm-none-eabi-gcc` and CMake ≥ 3.13. The host build
 needs any C++17 compiler, Python 3, and `libmbedtls-dev` for the TLS/Git
 tests; `PICO_SDK_PATH` there enables the Bluetooth tests (BTstack sources).
 
-Flash the `.uf2` in BOOTSEL mode, or copy it to the SD card folder used by
+Ready-to-flash `.uf2` files for every board are attached to each CI run
+(artifacts `picopods-<board>`). Flash the `.uf2` in BOOTSEL mode, or copy it to the SD card folder used by
 the PicoCalc UF2 Loader. **First run on new hardware:** flash `pd_demo.uf2`
 and go through its keyboard, colour, audio and flash-cache screens.
 
@@ -110,8 +113,19 @@ docs/         ARCHITECTURE, PORTING, MIGRATION, ROADMAP
 
 ## Status
 
-Builds cleanly for `pico2_w`, `pico2`, `pico_w` and `pico` (PodBoy is
-skipped on RP2040) and for the host, where the whole test suite passes.
-The drivers come from Writer and PicoBoy code that ran on real PicoCalc
-hardware, but the ported pods have not been run on a device yet: the first
-hardware session should go through the demo.
+- Builds cleanly for `pico2_w`, `pico2`, `pico_w` and `pico` (PodBoy is
+  skipped on RP2040) and for the host; CI checks all of them.
+- Host tests (24) pass: editor engine fuzz test with ASan/UBSan, syntax
+  lexer, ePub samples with structure checks, X3 upload against a mock
+  server, core libraries (files, settings, input, drawing, dialogs,
+  blitter, flash cache), tree operations, the Bluetooth OBEX receiver and
+  simulated Bluetooth sessions, the BTstack lifecycle, and scripted
+  sessions of the demo and the three pods. Git clones of real
+  repositories run with `-DPD_NET_TESTS=ON` (needs network).
+- The drivers come from Writer and PicoBoy code that ran on real PicoCalc
+  hardware, but **the pods in this tree have not been run on a device
+  yet**. New and untested on hardware: multi-block SD writes (they fall
+  back to single-block writes on error) and Pod Files' USB drive mode.
+  The first hardware session should go through the demo.
+
+See [`CHANGELOG.md`](CHANGELOG.md) for what changed from the original firmwares.

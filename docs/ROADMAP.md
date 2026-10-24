@@ -66,6 +66,6 @@ Gate result: G-host 24/24 tests (new: `podfiles_migrate`), G-fw pico2_w: 3 pods 
 
 ### M4: CI and release
 Stage `m4/ci-release`. Gate: G-ci.
-- [ ] GitHub Actions: host tests and firmware for every board
-- [ ] Changelog, final docs
+- [x] GitHub Actions: host tests and firmware for every board
+- [x] Changelog, final docs
 - [ ] Integration branch → `main`
