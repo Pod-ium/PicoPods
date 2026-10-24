@@ -1,5 +1,5 @@
 #!/bin/sh
-# Checks the SD folder left by the files_script test (PicoCalc Files).
+# Checks the SD folder left by the podfiles_script test (Pod Files).
 set -e
 sd="$1"
 fail() { echo "check_files: $1" >&2; exit 1; }
@@ -11,5 +11,5 @@ fail() { echo "check_files: $1" >&2; exit 1; }
 [ "$(cat "$sd/Crate/b (2).txt")" = world ] || fail "keep-both copy missing"
 [ "$(cat "$sd/b.txt")" = world ]        || fail "copy source was removed"
 [ ! -e "$sd/c.txt" ]                    || fail "c.txt was not deleted"
-[ -f "$sd/.picocalc_files/settings.txt" ] || fail "settings not saved"
+[ -f "$sd/.podfiles/settings.txt" ]      || fail "settings not saved"
 echo "check_files: ok"

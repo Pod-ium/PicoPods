@@ -1,6 +1,8 @@
-# PicoCalc Files 1.2.11
+# Pod Files 1.3.0
 
-A file manager for the SD card of the ClockworkPi PicoCalc (Pico 2 W; also builds for Pico / Pico 2), built on picodev.
+A file manager for the SD card of the ClockworkPi PicoCalc (Pico 2 W; also builds for Pico / Pico 2), built on the PicoPods libraries.
+
+Pod Files was called *PicoCalc Files*. Version 1.3.0 is the renamed 1.2.11: on first start it renames the old `/.picocalc_files` folder to `/.podfiles`, so settings, the saved Wi-Fi network and Bluetooth pairings carry over.
 
 ## What it does
 
@@ -48,7 +50,7 @@ Files arrive in the folder (a name already there becomes `name (2).ext`). Esc st
 
 **Send** (PicoCalc -> phone or PC): mark files (or highlight one), press `b`, *Send*. Pick a paired device or *Search for devices* (keep the phone's Bluetooth settings open so it is visible). The phone asks to accept the file. Receiving on Ubuntu: keep Settings -> Bluetooth open while sending.
 
-**Pairing** happens on the first transfer: the PicoCalc shows a 6-digit code; accept if the other device shows the same. *Paired devices...* lists them and can forget one. Pairing keys are stored in `/.picocalc_files/bt_keys.bin` on the card, never in the Pico's flash (so they cannot collide with the UF2 Loader).
+**Pairing** happens on the first transfer: the PicoCalc shows a 6-digit code; accept if the other device shows the same. *Paired devices...* lists them and can forget one. Pairing keys are stored in `/.podfiles/bt_keys.bin` on the card, never in the Pico's flash (so they cannot collide with the UF2 Loader).
 
 Once used, Bluetooth stays on in the background until the PicoCalc is switched off, hidden and not accepting connections outside the Bluetooth screens (the radio chip does not restart reliably within a session, so it is never shut down and restarted).
 
@@ -61,7 +63,7 @@ Folders cannot be sent (Object Push carries single files). The receive screen sh
 1. Go to the folder that should contain the repository and press `g` (or *Git clone...* in the menu).
 2. Type `owner/repo` (GitHub) or a full URL (`https://codeberg.org/owner/repo`, `https://gitlab.com/...`).
 3. Choose **Latest commit** (fast, default) or **Full history**, and optionally a branch or tag.
-4. The first time, pick your Wi-Fi network and type its password (saved in `/.picocalc_files/wifi.txt`, plain text). *Wi-Fi...* in the menu manages it; the radio turns off after 10 idle minutes.
+4. The first time, pick your Wi-Fi network and type its password (saved in `/.podfiles/wifi.txt`, plain text). *Wi-Fi...* in the menu manages it; the radio turns off after 10 idle minutes.
 
 The result is a real Git repository: the files plus a `.git` folder that `git status`, `git log` and `git pull` understand when the card is in a computer. Esc stops a clone; the half-made folder is removed.
 
@@ -69,7 +71,7 @@ Limits and notes:
 - Public repositories only for now (no sign-in, no push).
 - Up to 5000 objects per download (files + folders + commits): fine for most projects with *Latest commit*; large histories may exceed it.
 - Names FAT cannot store (`:` `?` `*` ...) and submodules are skipped and counted.
-- Certificates are checked against built-in public roots (GitHub, Let's Encrypt, DigiCert, Google, Amazon, GlobalSign). For a self-hosted server with its own CA, put the CA in PEM format in `/.picocalc_files/ca.pem`. The device has no clock, so certificate expiry dates are not checked.
+- Certificates are checked against built-in public roots (GitHub, Let's Encrypt, DigiCert, Google, Amazon, GlobalSign). For a self-hosted server with its own CA, put the CA in PEM format in `/.podfiles/ca.pem`. The device has no clock, so certificate expiry dates are not checked.
 
 ## USB drive mode
 
@@ -99,11 +101,11 @@ The USB screen shows two diagnostic lines; they tell how far the computer got:
 
 ## Files it writes
 
-`/.picocalc_files/settings.txt`: theme, list font, sort order, hidden files, last folder, last Git URL. `/.picocalc_files/wifi.txt`: Wi-Fi network and password. `/.picocalc_files/bt_keys.bin`, `bt_devices.txt`: Bluetooth pairing keys and device names.
+`/.podfiles/settings.txt`: theme, list font, sort order, hidden files, last folder, last Git URL. `/.podfiles/wifi.txt`: Wi-Fi network and password. `/.podfiles/bt_keys.bin`, `bt_devices.txt`: Bluetooth pairing keys and device names.
 
 ## Building
 
-Part of the picodev tree: `cmake --build build --target picocalc_files` gives `build/apps/files/picocalc_files.uf2`. Host simulator: `PD_SDCARD=./sd build-host/apps/files/picocalc_files`, and `ctest -R "files|fs_ops"` runs its tests.
+Part of the PicoPods tree: `cmake --build build --target podfiles` gives `build/pods/podfiles/podfiles.uf2`. Host simulator: `PD_SDCARD=./sd build-host/pods/podfiles/podfiles`, and `ctest -R "podfiles|fs_ops|obex"` runs its tests.
 
 ## Not yet tested on hardware
 
