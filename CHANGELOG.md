@@ -1,6 +1,6 @@
 # Changelog
 
-## PicoPods 1.0.0 (unreleased)
+## PicoPods 1.0.0 (2026-10-24)
 
 First release of the PicoPods tree: the common PicoCalc libraries and three
 pods, assembled from PicoCalc Writer 2.1.0, PicoBoy 1.0 and picodev 1–2
