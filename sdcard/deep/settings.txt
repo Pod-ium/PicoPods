@@ -1,3 +1,0 @@
-volume=70
-name=multi line
-on=1
