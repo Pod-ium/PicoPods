@@ -6,9 +6,9 @@
 // and read through XIP. Loading the same, unchanged file again is instant.
 //
 // Works when the firmware is flashed directly (BOOTSEL / picotool) and when it
-// is started by the PicoCalc UF2 Loader, which on the RP2350 runs apps from a
-// flash partition with address translation: the cache stays inside the app's
-// own partition.
+// is started by the PicoCalc UF2 Loader (see pd/uf2loader.h): on the RP2350
+// the cache stays inside the app's own partition, on the RP2040 below the
+// loader at the top of the flash.
 //
 // Host builds keep the file in RAM instead.
 #pragma once

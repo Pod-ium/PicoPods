@@ -49,8 +49,14 @@ needs any C++17 compiler, Python 3, and `libmbedtls-dev` for the TLS/Git
 tests; `PICO_SDK_PATH` there enables the Bluetooth tests (BTstack sources).
 
 Ready-to-flash `.uf2` files for every board are attached to each CI run
-(artifacts `picopods-<board>`). Flash the `.uf2` in BOOTSEL mode, or copy it to the SD card folder used by
-the PicoCalc UF2 Loader. **First run on new hardware:** flash `pd_demo.uf2`
+(artifacts `picopods-<board>`). Flash the `.uf2` in BOOTSEL mode, or run it from the SD card with
+[UF2 Loader](https://github.com/pelrun/uf2loader): copy it to `pico2-apps/`
+(Pico 2 / 2 W) or `pico1-apps/` (Pico / Pico W) and pick it in the loader's
+menu. All pods and examples are plain Pico SDK images, which the loader runs
+unchanged; the only code that writes flash (`pd_flash_cache`: PodBoy's ROM
+cache, the demo's flash test) stays inside the app partition on the RP2350
+and below the loader's top 16 KB on the RP2040. Bluetooth pairings live on the
+SD card, never in flash. **First run on new hardware:** flash `pd_demo.uf2`
 and go through its keyboard, colour, audio and flash-cache screens.
 
 ## Releases

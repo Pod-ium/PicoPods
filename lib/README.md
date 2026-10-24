@@ -21,7 +21,7 @@ everything else is plain C++17 and is tested on a PC.
 | `pd_terminal` | `terminals` | `pd/terminal.h`, `pd/terminals/*.h` | The selected terminal (`-DPD_TERMINAL=`): `picocalc` wires the drivers to the PicoCalc pins, `host` is a headless PC terminal for tests |
 | `pd_input` | `input` | `pd/input.h`, `pd/keys.h` | Raw key layer (press/release, key state) for games, cooked layer (modifiers, auto-repeat) for UIs, optional polling on core 1 |
 | `pd_diag` | `system` | `pd/diag.h` | Start-up log, reset breadcrumb, crash screen for HardFault and `panic()` |
-| `pd_flash_cache` | `system` | `pd/flash_cache.h` | Copy a file from SD into flash and read it memory-mapped; UF2 Loader partition aware |
+| `pd_flash_cache` | `system` | `pd/flash_cache.h`, `pd/uf2loader.h` | Copy a file from SD into flash and read it memory-mapped; stays out of the PicoCalc UF2 Loader's flash (RP2350 partition, RP2040 top 16 KB) |
 | `pd_usb_drive` | `usb` | `pd/usb_drive.h` | The SD card as a USB mass-storage device on the board's native USB (TinyUSB MSC) |
 
 ## `services/`: storage and connectivity
