@@ -1,4 +1,4 @@
-# Porting picodev
+# Porting PicoPods
 
 ## To another board (MCU module)
 
@@ -35,7 +35,7 @@ target_compile_definitions(my_app PRIVATE
 A terminal is one library that implements `pd::terminal_init()` and `pd::terminal()` (declared in `lib/hardware/terminals/include/pd/terminal.h`). Steps:
 
 1. **Create** `lib/hardware/terminals/<name>/` with `include/pd/terminals/<name>.h` (pin map), `src/<name>.cpp`, `CMakeLists.txt` defining `pd_terminal_<name>`, and add it to `lib/hardware/terminals/CMakeLists.txt`.
-2. **Reuse or write drivers.** A driver implements one HAL interface and takes its pins in a `Config`. For a chip picodev does not know (an ST7789 panel, a GPIO matrix keyboard, I2S audio), add it to `lib/hardware/drivers/`; only the driver talks to the SDK.
+2. **Reuse or write drivers.** A driver implements one HAL interface and takes its pins in a `Config`. For a chip PicoPods does not know (an ST7789 panel, a GPIO matrix keyboard, I2S audio), add it to `lib/hardware/drivers/`; only the driver talks to the SDK.
 3. **Translate key codes** to `pd/keys.h` in the keyboard driver (these are the PicoCalc's codes; ASCII keys use ASCII).
 4. **Wire it up** in `terminal_init()`: set the clock first, then initialise the drivers, fill in the `Terminal` fields, call `fs::set_block_device()` for storage and `keyboard_.attach()` for the keyboard.
 5. **Build** with `-DPD_TERMINAL=<name>` and run `pd_demo`.

@@ -2,13 +2,13 @@
 
 ## Three axes
 
-picodev separates three things that change independently:
+PicoPods separates three things that change independently:
 
 | Axis | Examples | Where it lives | Selected by |
 |---|---|---|---|
 | **Board** — the programmable module | Pico, Pico W, Pico 2, Pico 2 W, RP2350 boards with PSRAM | `pd/board.h`, `lib/hardware/core/src/sys_rp2.cpp` | `-DPD_BOARD=` (Pico SDK board name) |
 | **Terminal** — the device the board plugs into | PicoCalc, the PC (`host`) | `lib/hardware/terminals/<name>` | `-DPD_TERMINAL=` |
-| **App** — your firmware | Writer, PicoBoy, the demo | `apps/<name>` | `picodev_add_app()` |
+| **App** — your firmware | Writer, PicoBoy, the demo | `apps/<name>` | `picopods_add_pod()` |
 
 Apps never name a pin, an SPI instance or a chip. They see the terminal through HAL interfaces and ask the board what it can do.
 
@@ -69,7 +69,7 @@ The PicoCalc panel only accepts 18-bit colour, so a full framebuffer would take 
 
 ## Threads and cores
 
-picodev is single-threaded by default. Core 1 is used only if the app asks for it (`keyboard_on_core1`, or `sys::launch_core1()` for its own work). `launch_core1()` prepares core 1 for `flash_safe_execute`, so the flash cache can write flash while core 1 runs. The PicoCalc south-bridge driver serialises I2C with a mutex, so the battery can be read from core 0 while core 1 polls keys.
+PicoPods is single-threaded by default. Core 1 is used only if the app asks for it (`keyboard_on_core1`, or `sys::launch_core1()` for its own work). `launch_core1()` prepares core 1 for `flash_safe_execute`, so the flash cache can write flash while core 1 runs. The PicoCalc south-bridge driver serialises I2C with a mutex, so the battery can be read from core 0 while core 1 polls keys.
 
 ## Memory
 
@@ -77,4 +77,4 @@ Static RAM of the demo on a Pico 2 W is about 108 KB, most of it lwIP and the CY
 
 ## Build model
 
-All libraries are CMake `INTERFACE` targets compiled into each app, like the Pico SDK's own libraries. Compile definitions set on an app (pin overrides, `PICO_PANIC_FUNCTION`, lwIP options) therefore reach the library code too. `cmake/picodev_init.cmake` runs before `project()` (board, terminal, SDK import); `cmake/picodev.cmake` after it (SDK init, libraries, `picodev_add_app`).
+All libraries are CMake `INTERFACE` targets compiled into each app, like the Pico SDK's own libraries. Compile definitions set on an app (pin overrides, `PICO_PANIC_FUNCTION`, lwIP options) therefore reach the library code too. `cmake/picopods_init.cmake` runs before `project()` (board, terminal, SDK import); `cmake/picopods.cmake` after it (SDK init, libraries, `picopods_add_pod`).
