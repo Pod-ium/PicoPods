@@ -68,11 +68,11 @@ add_test(NAME writer_script COMMAND ${CMAKE_COMMAND} -E env
     sh -c "rm -rf ${_tmp}/writer_sd/* ${_tmp}/writer_sd/.fwedit && $<TARGET_FILE:picocalc_writer> && test -s ${_tmp}/writer_sd/hello.md && test -s ${_tmp}/writer_sd/hello.epub")
 set_tests_properties(writer_script PROPERTIES TIMEOUT 60)
 
-# PicoBoy: starts, shows the ROM browser (no ROMs here), opens a folder.
-file(MAKE_DIRECTORY ${_tmp}/picoboy_sd/roms/sub)
-add_test(NAME picoboy_script COMMAND picoboy WORKING_DIRECTORY ${_tmp})
-set_tests_properties(picoboy_script PROPERTIES TIMEOUT 60 ENVIRONMENT
-    "PD_SDCARD=${_tmp}/picoboy_sd;PD_FRAMES=${_tmp}/picoboy_frames;PD_KEYS=down,enter,bksp,shot")
+# PodBoy: starts, shows the ROM browser (no ROMs here), opens a folder.
+file(MAKE_DIRECTORY ${_tmp}/podboy_sd/roms/sub)
+add_test(NAME podboy_script COMMAND podboy WORKING_DIRECTORY ${_tmp})
+set_tests_properties(podboy_script PROPERTIES TIMEOUT 60 ENVIRONMENT
+    "PD_SDCARD=${_tmp}/podboy_sd;PD_FRAMES=${_tmp}/podboy_frames;PD_KEYS=down,enter,bksp,shot")
 
 # PicoCalc Files: make a folder, copy a file into it, cut/paste, delete, hidden
 # toggle, menu, help; the card must end up in the expected state.

@@ -38,6 +38,9 @@ if [ "$what" = fw ] || [ "$what" = all ]; then
     for b in $boards; do
         echo "== G-fw ($b)"
         step "$out/fw-$b-configure.log" cmake -S "$root" -B "$out/fw-$b" -DPD_BOARD="$b"
+        # list only what this build produces, not leftovers of moved pods
+        # (the .uf2 is written after linking: drop the .elf too to relink)
+        find "$out/fw-$b" \( -name '*.uf2' -o -name '*.elf' \) -delete
         step "$out/fw-$b-build.log" cmake --build "$out/fw-$b" -j "$jobs"
         (cd "$out/fw-$b" && find . -name '*.uf2' | sed 's|^\./||' | sort)
     done

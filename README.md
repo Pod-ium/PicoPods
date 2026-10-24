@@ -12,7 +12,7 @@ PicoPods is one tree with two parts:
 
 | Pod | Folder | What it is |
 |---|---|---|
-| PicoBoy 1.1 | `apps/picoboy` | Game Boy (DMG) emulator. Needs an RP2350 |
+| **PodBoy** 1.1 | [`pods/podboy`](pods/podboy) | Game Boy (DMG) emulator. Needs an RP2350 |
 | PicoCalc Writer 3.0 | `apps/writer` | Text editor: files larger than RAM (SD-backed), undo, syntax colours, ePub export |
 | PicoCalc Files 1.2 | `apps/files` | File manager: copy / move / delete, Bluetooth, Git clone, USB drive mode |
 | `pd_demo` | `apps/demo` | Tour of the libraries and hardware check |
@@ -28,7 +28,7 @@ Pod Files): see [`docs/ROADMAP.md`](docs/ROADMAP.md).
 # Firmware for PicoCalc + Pico 2 W (default)
 cmake -B build -DPICO_SDK_PATH=/path/to/pico-sdk
 cmake --build build -j
-# -> build/apps/<pod>/<pod>.uf2
+# -> build/pods/<pod>/<pod>.uf2 (and build/apps/... until M3 is done)
 
 # Other boards
 cmake -B build-pico -DPD_BOARD=pico        # also pico_w, pico2, or any Pico SDK board name

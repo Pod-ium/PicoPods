@@ -1,4 +1,4 @@
-// PicoBoy - Game Boy (DMG) emulator core
+// PodBoy - Game Boy (DMG) emulator core
 // Portable C++: no Pico SDK dependencies, so it also builds on a PC for testing.
 #pragma once
 #include <stdint.h>
@@ -6,7 +6,7 @@
 
 // On the Pico, hot functions are placed in RAM so the XIP flash cache is left
 // to the ROM data (the running game is stored in flash).
-#if defined(PICOBOY_DEVICE)
+#if defined(PODBOY_DEVICE)
 #define GB_HOT __attribute__((section(".time_critical.gb")))
 #else
 #define GB_HOT

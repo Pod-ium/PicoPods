@@ -1,6 +1,6 @@
-// PicoBoy - app configuration. Hardware (pins, SPI/I2C speeds, audio pins)
-// now lives in picodev's PicoCalc terminal: override it with PD_PICOCALC_*
-// compile definitions in CMakeLists.txt (see picodev docs/PORTING.md).
+// PodBoy - app configuration. Hardware (pins, SPI/I2C speeds, audio pins)
+// now lives in the PicoPods PicoCalc terminal: override it with PD_PICOCALC_*
+// compile definitions in CMakeLists.txt (see docs/PORTING.md).
 #pragma once
 #include "pd/keys.h"
 
@@ -14,7 +14,7 @@
 #define AUTOSAVE_FRAMES      180          // save .sav ~3 s after the game last wrote to cart RAM
 #define DEFAULT_VOLUME       60           // percent
 
-// Key bindings (picodev / PicoCalc key codes; letters are matched case-insensitively)
+// Key bindings (PicoPods / PicoCalc key codes; letters are matched case-insensitively)
 #define BIND_A1              'x'
 #define BIND_A2              'k'
 #define BIND_B1              'z'

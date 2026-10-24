@@ -1,4 +1,4 @@
-// PicoBoy - memory bus, cartridge mappers, timer, joypad, frame loop
+// PodBoy - memory bus, cartridge mappers, timer, joypad, frame loop
 #include "gb.h"
 #include <string.h>
 

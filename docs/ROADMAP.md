@@ -53,7 +53,7 @@ Gate result: G-host 23/23 tests, G-fw pico2_w / pico2 (6 `.uf2`), pico_w / pico 
 
 ### M3: Pods
 One stage per pod. Gate: G-host, G-fw, then G-names at the end.
-- [ ] `m3/podboy`: PicoBoy → **PodBoy** (`pods/podboy`)
+- [x] `m3/podboy`: PicoBoy → **PodBoy** (`pods/podboy`)
 - [ ] `m3/pod-writer`: PicoCalc Writer → **Pod Writer** (`pods/podwriter`)
 - [ ] `m3/pod-files`: PicoCalc Files → **Pod Files** (`pods/podfiles`)
 - [ ] `m3/examples-cleanup`: demo, template, USB probe into `examples/`; retire `legacy/`

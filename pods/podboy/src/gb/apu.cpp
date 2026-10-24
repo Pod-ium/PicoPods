@@ -1,4 +1,4 @@
-// PicoBoy - APU: two square channels (one with sweep), wave, noise.
+// PodBoy - APU: two square channels (one with sweep), wave, noise.
 // Produces stereo samples at 32768 Hz (one every 128 CPU cycles).
 #include "gb.h"
 #include <string.h>

@@ -1,4 +1,4 @@
-// PicoBoy - PPU: scanline renderer with DMG mode timing
+// PodBoy - PPU: scanline renderer with DMG mode timing
 #include "gb.h"
 #include <string.h>
 

@@ -1,7 +1,7 @@
-// PicoBoy - Game Boy emulator firmware for the ClockworkPi PicoCalc, on picodev.
+// PodBoy - Game Boy emulator firmware for the ClockworkPi PicoCalc, on the PicoPods libraries.
 //
 // Core 0: emulation, video (IndexedBlitter, DMA), audio, SD card, UI.
-// Core 1: keyboard polling (picodev's background keyboard: the controller needs
+// Core 1: keyboard polling (the PicoPods background keyboard: the controller needs
 //         slow, blocking I2C reads).
 #include <cstdio>
 #include <cstring>
@@ -106,7 +106,7 @@ bool load_rom(const std::string& p) {
     switch (gbx.load(rom, size, cart_ram, sizeof cart_ram)) {
         case gb::LoadResult::OK: break;
         case gb::LoadResult::CGB_ONLY:
-            show_message("Game Boy Color only", "This game needs a GBC.", "PicoBoy emulates the original DMG.");
+            show_message("Game Boy Color only", "This game needs a GBC.", "PodBoy emulates the original DMG.");
             return false;
         case gb::LoadResult::UNSUPPORTED_MBC: {
             char m[40];
@@ -130,7 +130,7 @@ void draw_game_chrome() {
     const gfx::Font& f = gfx::font(gfx::FONT_6x12);
     gfx::fill(0, 0, gfx::width(), GAME_Y, 0x000000);
     gfx::fill(0, GAME_Y + GAME_H, gfx::width(), gfx::height() - GAME_Y - GAME_H, 0x000000);
-    const char* title = gbx.info().title[0] ? gbx.info().title : "PicoBoy";
+    const char* title = gbx.info().title[0] ? gbx.info().title : "PodBoy";
     gfx::text(4, 2, 0, f, title, 0x606870, 0x000000);
     gfx::text(gfx::width() - 4 - 9 * f.w, 2, 0, f, "Esc: menu", 0x606870, 0x000000);
 }
@@ -347,11 +347,11 @@ int main() {
         audio->set_volume(volume_setting);
     }
     if (!video.begin(term->display(), {gb::SCREEN_W, gb::SCREEN_H, 2, 0, GAME_Y})) {
-        show_message("PicoBoy", "Not enough memory for video buffers");
+        show_message("PodBoy", "Not enough memory for video buffers");
     }
     flash_cache::init(ROMCACHE_MAX_BYTES);
 
-    app::splash(ui.theme(), "PicoBoy", "Game Boy emulator", true);   // bars: red, green, blue, white
+    app::splash(ui.theme(), "PodBoy", "Game Boy emulator", true);   // bars: red, green, blue, white
     sys::sleep_ms(1500);
 
     app::mount_storage(ui);
@@ -366,7 +366,7 @@ int main() {
         opt.empty_hint = "No .gb files here";
         opt.allow_cancel = false;
         ui.kbd.flush();
-        if (!ui::browse(ui, "PicoBoy", cur_dir, file, opt)) {
+        if (!ui::browse(ui, "PodBoy", cur_dir, file, opt)) {
             fs::unmount();
             app::mount_storage(ui);
             continue;

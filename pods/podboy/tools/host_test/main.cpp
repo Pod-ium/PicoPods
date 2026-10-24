@@ -1,4 +1,4 @@
-// PicoBoy host test harness: runs the emulator core on a PC.
+// PodBoy host test harness: runs the emulator core on a PC.
 //   host_test <rom.gb> [frames] [out.pgm]
 // Prints anything the ROM sends over the serial port (Blargg tests report
 // "Passed"/"Failed" this way) and optionally dumps the final screen as a PGM image.
