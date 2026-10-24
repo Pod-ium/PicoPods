@@ -37,3 +37,6 @@ pods, assembled from PicoCalc Writer 2.1.0, PicoBoy 1.0 and picodev 1–2
 - GitHub Actions run both gates on every push and pull request and keep
   the `.uf2` files of each board as artifacts.
 - Prebuilt `.uf2` files are no longer committed; take them from CI.
+- Release workflow: every published release gets `podboy_<version>.uf2`,
+  `podwriter_<version>.uf2`, `podfiles_<version>.uf2` and a SHA256SUMS file
+  as release assets (`tools/package_release.sh` builds them locally too).

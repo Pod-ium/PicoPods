@@ -53,6 +53,17 @@ Ready-to-flash `.uf2` files for every board are attached to each CI run
 the PicoCalc UF2 Loader. **First run on new hardware:** flash `pd_demo.uf2`
 and go through its keyboard, colour, audio and flash-cache screens.
 
+## Releases
+
+Publishing a GitHub release runs `.github/workflows/release.yml`, which
+builds the three pods for PicoCalc + Pico 2 W and attaches them to the
+release as `podboy_<version>.uf2`, `podwriter_<version>.uf2` and
+`podfiles_<version>.uf2` (tag `v1.2.0` gives version `1.2.0`), plus a
+`SHA256SUMS_<version>.txt`. The same files can be built locally with
+`PICO_SDK_PATH=… tools/package_release.sh <version>` (output in `dist/`).
+The workflow can also be started by hand from the Actions tab for an
+existing tag, to rebuild or replace its files.
+
 ## Write a pod
 
 Copy `examples/template` to `pods/<name>`, rename it and add it to the top-level `CMakeLists.txt`:
@@ -107,7 +118,7 @@ lib/          common libraries, by layer: hardware/ services/ interface/ content
 pods/         podboy/ podwriter/ podfiles/
 examples/     demo/ template/ usbprobe/
 tests/        host tests (ctest) and their data
-tools/        gate.sh (merge gates), gen_fonts.py (font data)
+tools/        gate.sh (merge gates), package_release.sh (release .uf2), gen_fonts.py (font data)
 docs/         ARCHITECTURE, PORTING, MIGRATION, ROADMAP
 ```
 
