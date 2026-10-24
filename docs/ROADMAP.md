@@ -28,6 +28,11 @@ be true before a stage is merged).
 | **G-host** | `cmake -B build-host -DPD_TERMINAL=host -DPICO_SDK_PATH=…` builds with no errors and `ctest` passes 100% |
 | **G-fw** | `cmake -B build` (PicoCalc + Pico 2 W) builds every firmware to `.uf2` |
 | **G-names** | after M3: no old product name (`picodev`, `PicoBoy`, `PicoCalc Writer`, `PicoCalc Files`) outside history notes and compatibility shims |
+
+G-names is checked by reading the output of
+`git grep -n -i -E "picodev|picoboy|picocalc.?writer|picocalc.?files" -- . ':!docs/ROADMAP.md' ':!docs/MIGRATION.md'`:
+what remains must be provenance ("from PicoCalc Writer's driver"), the
+renamed-from notes in the pod READMEs, or the Pod Files folder migration.
 | **G-ci** | after M4: the GitHub Actions workflow is green on the pull request |
 
 ## Milestones
@@ -53,10 +58,11 @@ Gate result: G-host 23/23 tests, G-fw pico2_w / pico2 (6 `.uf2`), pico_w / pico 
 
 ### M3: Pods
 One stage per pod. Gate: G-host, G-fw, then G-names at the end.
+Gate result: G-host 24/24 tests (new: `podfiles_migrate`), G-fw pico2_w: 3 pods + 3 examples, G-names clean.
 - [x] `m3/podboy`: PicoBoy → **PodBoy** (`pods/podboy`)
 - [x] `m3/pod-writer`: PicoCalc Writer → **Pod Writer** (`pods/podwriter`)
 - [x] `m3/pod-files`: PicoCalc Files → **Pod Files** (`pods/podfiles`)
-- [ ] `m3/examples-cleanup`: demo, template, USB probe into `examples/`; retire `legacy/`
+- [x] `m3/examples-cleanup`: demo, template, USB probe into `examples/`; retire `legacy/`
 
 ### M4: CI and release
 Stage `m4/ci-release`. Gate: G-ci.

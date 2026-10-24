@@ -1,6 +1,6 @@
 # Moving PicoCalc Writer and PicoBoy onto the common libraries
 
-Both firmwares have been ported: see `pods/podwriter` (Writer 3.0, now Pod Writer) and `pods/podboy` (PicoBoy 1.1, now PodBoy). This is the map from their original code to the libraries, useful to follow the port or to move other PicoCalc firmware the same way.
+Both firmwares have been ported: see `pods/podwriter` (Writer 3.0, now Pod Writer) and `pods/podboy` (PicoBoy 1.1, now PodBoy). The original 2.1.0 / 1.0 sources are in the repository history (commits "Import PicoCalc Writer 2.1.0" and "Import PicoBoy 1.0", folder `legacy/`, removed once the pods were in place). This is the map from their original code to the libraries, useful to follow the port or to move other PicoCalc firmware the same way.
 
 ## PicoCalc Writer 2.1.0
 

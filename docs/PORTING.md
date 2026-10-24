@@ -94,5 +94,5 @@ Things to check on a new terminal:
 `lib/hardware/terminals/host` is also a working example of a terminal: an RGB888 framebuffer display, a scripted keyboard, a paced null audio device, and the POSIX file system. It is what the tests run on. See `lib/hardware/terminals/host/include/pd/terminals/host.h` for the key-script syntax, e.g.
 
 ```sh
-PD_SDCARD=./sd PD_FRAMES=./frames PD_KEYS="down,enter,text:hello,enter,esc" ./build-host/apps/demo/pd_demo
+PD_SDCARD=./sd PD_FRAMES=./frames PD_KEYS="down,enter,text:hello,enter,esc" ./build-host/examples/demo/pd_demo
 ```
