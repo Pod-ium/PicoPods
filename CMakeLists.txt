@@ -12,12 +12,16 @@ include(cmake/picopods_init.cmake)
 project(picopods C CXX ASM)
 include(cmake/picopods.cmake)
 
-add_subdirectory(apps/template)
-add_subdirectory(apps/demo)
+# Pods
 add_subdirectory(pods/podboy)
 add_subdirectory(pods/podwriter)
 add_subdirectory(pods/podfiles)
-add_subdirectory(apps/usbprobe)
+
+# Examples: hardware check / library tour, pod skeleton, USB port probe
+add_subdirectory(examples/demo)
+add_subdirectory(examples/template)
+add_subdirectory(examples/usbprobe)
+
 if(PD_HOST)
     enable_testing()
     add_subdirectory(tests)
