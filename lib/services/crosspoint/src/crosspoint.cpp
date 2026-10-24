@@ -150,7 +150,7 @@ bool Client::status(Reply* r, const net::KeepGoing& kg, std::string* err) {
 
 bool Client::upload(const std::string& folder, const std::string& name, uint32_t size,
                     const Source& src, Reply* r, const Progress& progress, std::string* err) {
-    static const char kBoundary[] = "----PicoCalcWriterBoundary7MA4YWxkTrZu0gW";
+    static const char kBoundary[] = "----PicoPodsBoundary7MA4YWxkTrZu0gW";
     std::string dir = folder.empty() ? "/" : folder;
     if (dir[0] != '/') dir = "/" + dir;
     const std::string start = std::string("--") + kBoundary +

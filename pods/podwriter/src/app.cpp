@@ -1042,11 +1042,11 @@ void App::run() {
 }
 
 // ---------------------------------------------------------------------------
-// Help screen (picodev's scrollable text view)
+// Help screen (PicoPods' scrollable text view)
 // ---------------------------------------------------------------------------
 
 void App::showHelp() {
-    pd::ui::text_view(ui_, "PicoCalc Writer " FW_VERSION " - keyboard",
+    pd::ui::text_view(ui_, "Pod Writer " FW_VERSION " - keyboard",
                       {
                           "Esc              Menu",
                           "Ctrl+N  Ctrl+O   New / Open",

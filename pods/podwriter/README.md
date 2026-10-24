@@ -1,16 +1,17 @@
-# PicoCalc Writer 3.0
+# Pod Writer 3.0
 
 A distraction-free, bare-metal C++ text editor firmware for the **ClockworkPi PicoCalc** with a **Raspberry Pi Pico 2 W** (RP2350).
+Pod Writer was called *PicoCalc Writer*; it is the same editor, renamed when it joined PicoPods.
 It boots straight into the last file you were editing, at the same cursor position, and gets out of your way.
 
 Files are edited **directly on the SD card**, so documents far larger than the Pico's 520 KB of RAM (up to 2 GB) open instantly and edit smoothly.
 
 ## What's new in 3.0
 
-- **Rebuilt on picodev.** The editor engine, display driver, fonts, dialogs, keyboard, SD card, Wi-Fi, ePub export and X3 client now come from the shared picodev libraries (`../../lib`), the same code PicoBoy and any new PicoCalc firmware use. Only the editor itself (state, key bindings, rendering, commands) lives in this folder: 3 source files instead of 20.
+- **Rebuilt on the PicoPods libraries.** The editor engine, display driver, fonts, dialogs, keyboard, SD card, Wi-Fi, ePub export and X3 client now come from the shared libraries (`../../lib`), the same code PodBoy, Pod Files and any new pod use. Only the editor itself (state, key bindings, rendering, commands) lives in this folder: 3 source files instead of 20.
 - **Runs on every Pico-format board.** Pico 2 W is still the target; on boards without Wi-Fi (Pico, Pico 2) everything works except F8/F9, which report "No Wi-Fi on this board".
-- **Runs on a PC.** The picodev host build runs the real editor headless with scripted keys and screenshots; it replaces 2.1's `test/appsim`.
-- **Help** is a scrollable page; **Wi-Fi** connection progress and errors are shown in a panel (picodev's Wi-Fi manager) instead of the status line.
+- **Runs on a PC.** The PicoPods host build runs the real editor headless with scripted keys and screenshots; it replaces 2.1's `test/appsim`.
+- **Help** is a scrollable page; **Wi-Fi** connection progress and errors are shown in a panel (the PicoPods Wi-Fi manager) instead of the status line.
 - Settings, Wi-Fi credentials and the work folder are unchanged (`/.fwedit/`), so an existing SD card works as before.
 
 ## Features
@@ -74,21 +75,21 @@ The X3 address defaults to `http://crosspoint.local/`, resolved with mDNS. If yo
 
 ## Building
 
-The Writer is one of the apps of the picodev tree. From the picodev root:
+Pod Writer is one of the pods of the PicoPods tree. From the repository root:
 
 ```sh
 cmake -B build -DPICO_SDK_PATH=/path/to/pico-sdk        # PicoCalc + Pico 2 W
-cmake --build build -j --target picocalc_writer
-# -> build/apps/writer/picocalc_writer.uf2
+cmake --build build -j --target podwriter
+# -> build/pods/podwriter/podwriter.uf2
 ```
 
 Other boards: add `-DPD_BOARD=pico2` or `-DPD_BOARD=pico`. PC build: `cmake -B build-host -DPD_TERMINAL=host`, then for example
 
 ```sh
-PD_SDCARD=./sd PD_FRAMES=./frames PD_KEYS="text:Hello,ctrl+s" ./build-host/apps/writer/picocalc_writer
+PD_SDCARD=./sd PD_FRAMES=./frames PD_KEYS="text:Hello,ctrl+s" ./build-host/pods/podwriter/podwriter
 ```
 
-Requirements: Pico SDK 2.x, `arm-none-eabi-gcc`, CMake ≥ 3.13. FatFs is part of picodev; nothing is downloaded at configure time.
+Requirements: Pico SDK 2.x, `arm-none-eabi-gcc`, CMake ≥ 3.13. FatFs is part of the PicoPods libraries; nothing is downloaded at configure time.
 
 ## Flashing
 
@@ -99,14 +100,14 @@ The SD card must be FAT32 or exFAT. The editor creates a hidden `/.fwedit/` fold
 
 ## How it works
 
-- **picodev.** `src/app.cpp` (editor, rendering, commands), `src/app_share.cpp` (ePub, X3, Wi-Fi wrappers) and `src/main.cpp` are all that is Writer-specific. The piece table, layout and syntax lexer are `pd_text`; the rest comes from `pd_gfx`, `pd_ui`, `pd_input`, `pd_fs`, `pd_wifi`, `pd_epub`, `pd_crosspoint` and `pd_diag`. See picodev's `docs/MIGRATION.md` for the mapping from the 2.1 files.
+- **PicoPods libraries.** `src/app.cpp` (editor, rendering, commands), `src/app_share.cpp` (ePub, X3, Wi-Fi wrappers) and `src/main.cpp` are all that is specific to Pod Writer. The piece table, layout and syntax lexer are `pd_text`; the rest comes from `pd_gfx`, `pd_ui`, `pd_input`, `pd_fs`, `pd_wifi`, `pd_epub`, `pd_crosspoint` and `pd_diag`. See `docs/MIGRATION.md` for the mapping from the 2.1 files.
 - **Piece table on SD.** The opened file is never loaded into RAM: it is read in place, and everything you type is appended to `/.fwedit/add.tmp` (with a 4 KB RAM tail). The document is a list of 8-byte pieces pointing into those two files, backed by a 16 KB page cache.
 - **Undo** stores piece-list snapshots of the changed region, not text, so undoing a huge paste or replace costs almost nothing.
 - **Saving** writes a complete new file (`name.~fw`), then replaces the original and reloads it. It is crash-safe against partial writes, but it clears the undo history.
 - **Layout** is computed on demand from the start of the current logical line, so there is no line index to build when opening a big file.
 - **Rendering** uses a single-row line buffer with per-row hashing, so only rows that changed are resent to the LCD. There is no framebuffer.
 - **Wi-Fi** uses the CYW43 driver with lwIP in poll mode: nothing runs in the background, and the network is pumped only by the main loop and while an operation waits. Uploads stream the ePub from the SD card straight into TCP as a `multipart/form-data` POST to CrossPoint's `/upload` endpoint.
-- **Syntax colours** come from a small streaming lexer (`src/editor/syntax.cpp`) that only ever sees the visible rows. Everything that can span lines (block comments, docstrings, fenced code, multi-line XML tags) lives in a ~40-byte state that is cached at the top of the screen. That state stays valid while you type below it, and scrolling down continues from it. When it has to be rebuilt (jumping around, or editing above it) the lexer re-reads at most 8 KB before the top of the screen (`syn::kBackScan`). A construct opened further back than that, such as a code fence 8 KB above, may be coloured wrongly until you scroll closer.
+- **Syntax colours** come from a small streaming lexer (`lib/content/text/src/syntax.cpp`) that only ever sees the visible rows. Everything that can span lines (block comments, docstrings, fenced code, multi-line XML tags) lives in a ~40-byte state that is cached at the top of the screen. That state stays valid while you type below it, and scrolling down continues from it. When it has to be rebuilt (jumping around, or editing above it) the lexer re-reads at most 8 KB before the top of the screen (`syn::kBackScan`). A construct opened further back than that, such as a code fence 8 KB above, may be coloured wrongly until you scroll closer.
 - RAM use is about 107 KB static (most of it the Wi-Fi driver and lwIP buffers) plus the piece table; the firmware is about 530 KB of flash. After a very long editing session the table can fill up; the editor warns you to save, which compacts it.
 
 ## Start-up diagnostics
@@ -117,10 +118,10 @@ While starting, the firmware prints a short log (version, reset reason, and each
 
 - New lines are inserted as LF; existing CRLF files keep their CRLF line endings. Tabs in existing files are shown as one cell.
 - Maximum document size is 2 GB.
-- Hardware tunables are picodev's PicoCalc terminal options, set in `CMakeLists.txt` with `target_compile_definitions`: `PD_PICOCALC_LCD_HZ`, `PD_PICOCALC_LCD_INVERT` (0 if colours look inverted), `PD_PICOCALC_KBD_GAP_US` (16 ms by default), `PD_PICOCALC_SD_HZ`.
-- Tests live in picodev's `tests/` (run with `ctest` in a host build): the randomized editing-engine test with ASan/UBSan, the lexer tests, the ePub samples with structure checks, the X3 upload against a mock CrossPoint server, and a scripted session of this app. Versions 1.0 to 2.1 ran on real PicoCalc hardware; **3.0 has been built and tested on a PC only so far**.
+- Hardware tunables are the PicoCalc terminal options, set in `CMakeLists.txt` with `target_compile_definitions`: `PD_PICOCALC_LCD_HZ`, `PD_PICOCALC_LCD_INVERT` (0 if colours look inverted), `PD_PICOCALC_KBD_GAP_US` (16 ms by default), `PD_PICOCALC_SD_HZ`.
+- Tests live in the top-level `tests/` (run with `ctest` in a host build): the randomized editing-engine test with ASan/UBSan, the lexer tests, the ePub samples with structure checks, the X3 upload against a mock CrossPoint server, and a scripted session of this app. Versions 1.0 to 2.1 ran on real PicoCalc hardware; **3.0 has been built and tested on a PC only so far**.
 
 ## Licences
 
-- Terminus font: SIL Open Font License 1.1 (converted with picodev's `tools/gen_fonts.py`)
+- Terminus font: SIL Open Font License 1.1 (converted with `tools/gen_fonts.py`)
 - FatFs: ChaN's BSD-style licence

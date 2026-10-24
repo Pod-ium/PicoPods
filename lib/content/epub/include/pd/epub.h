@@ -25,6 +25,7 @@ struct Options {
     std::string title;
     std::string author;          // may be empty
     std::string language = "en"; // BCP 47, e.g. "en", "it"
+    std::string generator = "PicoPods";  // OPF generator metadata (the pod name)
     Kind kind = Kind::Text;
 };
 

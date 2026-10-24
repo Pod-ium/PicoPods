@@ -1,5 +1,5 @@
-// PicoCalc Writer - the editor application: state, rendering and commands.
-// Built on picodev: the editor engine (pd_text), display and fonts (pd_gfx),
+// Pod Writer - the editor application: state, rendering and commands.
+// Built on the PicoPods libraries: the editor engine (pd_text), display and fonts (pd_gfx),
 // dialogs (pd_ui), keyboard (pd_input), files (pd_fs), Wi-Fi (pd_wifi),
 // ePub (pd_epub) and the X3 client (pd_crosspoint).
 #pragma once
@@ -16,7 +16,7 @@
 #include "pd/text/text_buffer.h"
 #include "pd/wifi.h"
 
-// Short names for the picodev types the editor uses everywhere.
+// Short names for the PicoPods types the editor uses everywhere.
 using pd::text::Layout;
 using pd::text::Row;
 using pd::text::TextBuffer;

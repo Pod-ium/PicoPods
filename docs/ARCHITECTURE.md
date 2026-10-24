@@ -8,7 +8,7 @@ PicoPods separates three things that change independently:
 |---|---|---|---|
 | **Board** — the programmable module | Pico, Pico W, Pico 2, Pico 2 W, RP2350 boards with PSRAM | `pd/board.h`, `lib/hardware/core/src/sys_rp2.cpp` | `-DPD_BOARD=` (Pico SDK board name) |
 | **Terminal** — the device the board plugs into | PicoCalc, the PC (`host`) | `lib/hardware/terminals/<name>` | `-DPD_TERMINAL=` |
-| **App** — your firmware | Writer, PodBoy, the demo | `apps/<name>` | `picopods_add_pod()` |
+| **App** — your firmware | Pod Writer, PodBoy, the demo | `apps/<name>` | `picopods_add_pod()` |
 
 Apps never name a pin, an SPI instance or a chip. They see the terminal through HAL interfaces and ask the board what it can do.
 
@@ -52,7 +52,7 @@ Rules that keep the layers honest:
 
 ## Keyboard: one stream, two layers
 
-The PicoCalc keyboard controller is slow (each I2C read waits ~16 ms). `pd::input::Keyboard` reads the device either synchronously (throttled, what the Writer does) or on core 1 into a lock-free queue (`TerminalConfig::keyboard_on_core1`, what PicoBoy does). On top of the same stream:
+The PicoCalc keyboard controller is slow (each I2C read waits ~16 ms). `pd::input::Keyboard` reads the device either synchronously (throttled, what Pod Writer does) or on core 1 into a lock-free queue (`TerminalConfig::keyboard_on_core1`, what PodBoy does). On top of the same stream:
 
 - `poll_raw()` returns every press and release and maintains `down(code)`: games map keys to buttons.
 - `poll()` / `wait()` return presses with Ctrl/Shift/Alt attached and generate auto-repeat: menus and editors.
@@ -61,7 +61,7 @@ Both can be used in the same app (a game's play loop uses the raw layer, its pau
 
 ## Drawing without a framebuffer
 
-The PicoCalc panel only accepts 18-bit colour, so a full framebuffer would take 300 KB. `pd_gfx` streams everything through one row buffer (960 bytes): text is rendered one pixel row at a time with colours converted once per character (the Writer's renderer). Apps that do want a framebuffer use `IndexedBlitter`: 8-bit indices + palette, converted and scaled only for the lines that changed, sent by DMA while the CPU keeps working (PicoBoy's video path).
+The PicoCalc panel only accepts 18-bit colour, so a full framebuffer would take 300 KB. `pd_gfx` streams everything through one row buffer (960 bytes): text is rendered one pixel row at a time with colours converted once per character (Pod Writer's renderer). Apps that do want a framebuffer use `IndexedBlitter`: 8-bit indices + palette, converted and scaled only for the lines that changed, sent by DMA while the CPU keeps working (PodBoy's video path).
 
 ## Files
 

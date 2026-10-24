@@ -486,7 +486,7 @@ private:
             s += "<dc:creator opf:role=\"aut\">" + esc(o_.author) + "</dc:creator>\n";
         s += "<dc:language>" + esc(o_.language) + "</dc:language>\n"
              "<dc:identifier id=\"bookid\">" + std::string(uid) + "</dc:identifier>\n"
-             "<meta name=\"generator\" content=\"PicoCalc Writer\"/>\n"
+             "<meta name=\"generator\" content=\"" + esc(o_.generator) + "\"/>\n"
              "</metadata>\n<manifest>\n"
              "<item id=\"ncx\" href=\"toc.ncx\" media-type=\"application/x-dtbncx+xml\"/>\n"
              "<item id=\"css\" href=\"style.css\" media-type=\"text/css\"/>\n";
