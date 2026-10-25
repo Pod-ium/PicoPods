@@ -2,6 +2,13 @@
 
 [![CI](https://github.com/lando1784/PicoPods/actions/workflows/ci.yml/badge.svg)](https://github.com/lando1784/PicoPods/actions/workflows/ci.yml)
 
+> **This tree has been split.** PicoPods now lives in one repository per family:
+> [hydrogenium-pods](https://github.com/Pod-ium/hydrogenium-pods) (common libraries, examples, docs),
+> [helium-pods](https://github.com/Pod-ium/helium-pods) (games: PicoCraft),
+> [carbo-pods](https://github.com/Pod-ium/carbo-pods) (productivity: Pod Writer, Pod Files) and
+> [aurum-pods](https://github.com/Pod-ium/aurum-pods) (emulators: PodBoy, and PicoPods Web).
+> New work goes there; this repository is kept for its history.
+
 Firmware for the **ClockworkPi PicoCalc** with a Raspberry Pi **Pico 2 W**.
 
 PicoPods is one tree with two parts:
