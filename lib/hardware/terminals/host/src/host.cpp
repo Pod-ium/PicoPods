@@ -1,6 +1,7 @@
 // PicoPods terminal - host (PC) implementation.
 #include "pd/terminals/host.h"
 
+#include <atomic>
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
@@ -18,13 +19,18 @@ namespace pd {
 
 namespace {
 
+// Set by the interactive front end before terminal_init().
+std::atomic<bool> g_interactive{false};
+
 // ---------------------------------------------------------------- display
 class HostDisplay : public hal::Display {
 public:
     void init(int w, int h) {
+        std::lock_guard<std::mutex> lock(m_);
         w_ = w;
         h_ = h;
         fb_.assign(size_t(w) * size_t(h) * 3, 0);
+        ++gen_;
     }
     int width() const override { return w_; }
     int height() const override { return h_; }
@@ -34,6 +40,10 @@ public:
         px_ = x0; py_ = y0; part_ = 0;
     }
     void write(const uint8_t* d, size_t n) override {
+        // The lock only matters to the interactive window, which copies the
+        // framebuffer from its own thread.
+        std::lock_guard<std::mutex> lock(m_);
+        ++gen_;
         for (size_t i = 0; i < n; ++i) {
             pix_[part_++] = d[i];
             if (part_ < 3) continue;
@@ -48,6 +58,8 @@ public:
     void end() override {}
     std::vector<uint8_t> fb_;
     int w_ = 320, h_ = 320;
+    std::mutex m_;
+    std::atomic<uint32_t> gen_{0};
 
 private:
     int x0_ = 0, y0_ = 0, x1_ = 0, y1_ = 0, px_ = 0, py_ = 0, part_ = 0;
@@ -135,7 +147,9 @@ class HostKeyboard : public hal::KeyboardDevice {
 public:
     void init() {
         const char* s = getenv("PD_KEYS");
-        if (s && !*s) {   // set but empty: no keys ever (tests inject their own)
+        // Set but empty: no keys ever (tests inject their own). Interactive
+        // without a script: only the window's live keys, no stdin.
+        if ((s && !*s) || (!s && g_interactive)) {
             idle_ = true;
             return;
         }
@@ -156,6 +170,11 @@ public:
     }
     bool read(hal::RawKey& ev) override {
         std::lock_guard<std::mutex> lock(m_);
+        if (!live_.empty()) {
+            ev = live_.front();
+            live_.pop_front();
+            return true;
+        }
         if (idle_) return false;
         for (;;) {
             if (!pending_.empty()) {
@@ -175,6 +194,10 @@ public:
         }
     }
     uint32_t poll_interval_ms() const override { return 1; }
+    void push_live(hal::RawKey ev) {
+        std::lock_guard<std::mutex> lock(m_);
+        live_.push_back(ev);
+    }
 
 private:
     bool next_step() {
@@ -184,6 +207,10 @@ private:
             if (idx_ >= steps_.size()) {
                 auto_dump();
                 fprintf(stderr, "[host] key script finished\n");
+                if (g_interactive) {   // the window stays open for live keys
+                    idle_ = true;
+                    return false;
+                }
                 exit(0);
             }
             run(steps_[idx_++]);
@@ -214,41 +241,63 @@ private:
     std::vector<Step> steps_;
     size_t idx_ = 0;
     std::deque<hal::RawKey> pending_;
+    std::deque<hal::RawKey> live_;
     uint32_t wait_until_ = 0;
 };
 
 // ---------------------------------------------------------------- audio
+// Paced in real time; with a sink (the interactive window) it also plays,
+// and the sink's queue replaces the simulated one.
 class HostAudio : public hal::AudioOut {
 public:
     bool start(uint32_t rate) override {
+        if (sink_ && !sink_->open(rate)) sink_ = nullptr;
         rate_ = rate;
         start_us_ = sys::now_us();
         consumed_base_ = 0;
         queued_ = 0;
         return true;
     }
-    void stop() override { rate_ = 0; }
+    void stop() override {
+        if (sink_) sink_->close();
+        rate_ = 0;
+    }
     uint32_t sample_rate() const override { return rate_; }
-    void push(const int16_t*, int frames) override {
+    void push(const int16_t* d, int frames) override {
+        total_ += uint64_t(frames);
+        if (sink_) {
+            if (!rate_ || frames <= 0) return;
+            const int room = kRing - sink_->queued();   // like the device's ring
+            if (frames > room) frames = room > 0 ? room : 0;
+            scaled_.resize(size_t(frames) * 2);
+            for (size_t i = 0; i < scaled_.size(); ++i) scaled_[i] = int16_t(d[i] * vol_ / 100);
+            sink_->queue(scaled_.data(), frames);
+            return;
+        }
         update();
         queued_ += uint64_t(frames);
-        total_ += uint64_t(frames);
         // Like the device's 2048-frame ring: only a real overflow loses audio.
         if (buffered() > kRing) queued_ = consumed_base_ + uint64_t(kRing);
     }
     int buffered() const override {
+        if (sink_) return rate_ ? sink_->queued() : 0;
         const_cast<HostAudio*>(this)->update();
         return int(queued_ - consumed_base_);
     }
     int capacity() const override { return kRing - 700; }   // same as PwmAudio
     static constexpr int kRing = 2048;
     void silence() override {
+        if (sink_) {
+            sink_->clear();
+            return;
+        }
         update();
         queued_ = consumed_base_;
     }
-    void set_volume(int v) override { vol_ = v; }
+    void set_volume(int v) override { vol_ = v < 0 ? 0 : v > 100 ? 100 : v; }
     int volume() const override { return vol_; }
     uint64_t total_ = 0;
+    host::AudioSink* sink_ = nullptr;
 
 private:
     // Frames "played" so far, at the real-time sample rate.
@@ -264,6 +313,7 @@ private:
     uint32_t rate_ = 0;
     uint64_t start_us_ = 0, consumed_base_ = 0, queued_ = 0;
     int vol_ = 60;
+    std::vector<int16_t> scaled_;
 };
 
 class HostPower : public hal::Power {
@@ -300,6 +350,21 @@ Color pixel(int x, int y) {
 }
 
 uint64_t audio_frames_played() { return g_audio.total_; }
+
+void push_key(hal::RawKey ev) { g_kbd.push_live(ev); }
+void set_interactive(bool on) { g_interactive = on; }
+void set_audio_sink(AudioSink* sink) { g_audio.sink_ = sink; }
+
+uint32_t frame_generation() { return g_display.gen_; }
+
+bool copy_frame(std::vector<uint8_t>& rgb, int& w, int& h) {
+    std::lock_guard<std::mutex> lock(g_display.m_);
+    if (g_display.fb_.empty()) return false;
+    rgb = g_display.fb_;
+    w = g_display.w_;
+    h = g_display.h_;
+    return true;
+}
 
 }  // namespace host
 

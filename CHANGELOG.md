@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Libraries
+- Host terminal: interactive SDL2 window for every pod (screen, live
+  keyboard, sound; F12 saves a screenshot). Opens when `PD_KEYS` is not set;
+  `PD_WINDOW`, `PD_SCALE`; built when SDL2 is found (`-DPD_HOST_SDL`).
+  Headless runs and the tests are unchanged.
+
+### Pods
+- Pod Writer, Pod Files: `main()` ends with `return 0` (needed now that the
+  host window renames it).
+
+### Build and CI
+- G-host installs `libsdl2-dev`, so the window code is compiled on every push.
 ### Pods
 - **PodBoy 1.2**: display SPI at 50 MHz instead of 25 MHz, so scrolling
   scenes (every line changes) reach the screen at ~20 fps instead of ~11

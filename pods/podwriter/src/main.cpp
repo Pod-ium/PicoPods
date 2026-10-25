@@ -13,4 +13,5 @@ int main() {
     diag::stage(diag::kKeyboard);
     static App app(term.keyboard());
     app.run();
+    return 0;
 }

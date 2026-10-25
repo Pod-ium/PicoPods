@@ -53,7 +53,10 @@ endif()
 # picopods_add_pod(<name> SOURCES <files...> [LIBS <pd_libs...>]
 #                  [TITLE "..."] [VERSION "1.0"] [USB_STDIO])
 # Always links pd_app (terminal, ui, gfx, input, fs, core). On the device it
-# produces <name>.uf2 (runs from BOOTSEL or the PicoCalc UF2 Loader).
+# produces <name>.uf2 (runs from BOOTSEL or the PicoCalc UF2 Loader). On the
+# host with SDL2 it also gets the interactive window: the pod's main() is then
+# renamed (main=pd_host_app_main) so the window can own the main thread, which
+# is why main() must end with a return.
 function(picopods_add_pod name)
     cmake_parse_arguments(A "USB_STDIO" "TITLE;VERSION" "SOURCES;LIBS" ${ARGN})
     add_executable(${name} ${A_SOURCES})
@@ -66,6 +69,10 @@ function(picopods_add_pod name)
     target_compile_definitions(${name} PRIVATE PD_APP_VERSION="${A_VERSION}")
     if(PD_HOST)
         target_compile_options(${name} PRIVATE -g)
+        if(PD_HOST_WINDOW)
+            target_link_libraries(${name} PRIVATE pd_host_window)
+            target_compile_definitions(${name} PRIVATE main=pd_host_app_main)
+        endif()
     else()
         target_compile_options(${name} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions -fno-rtti>)
         if(NOT A_TITLE)
