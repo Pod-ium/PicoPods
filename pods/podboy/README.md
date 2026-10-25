@@ -1,8 +1,10 @@
-# PodBoy 1.1
+# PodBoy 1.2
 
 Emulatore Game Boy (DMG) in C++ per **ClockworkPi PicoCalc** con **Raspberry Pi Pico 2 W**.
 
 **PodBoy** si chiamava *PicoBoy*: è lo stesso emulatore, rinominato quando è entrato in PicoPods.
+
+**Novità della 1.2:** lo schermo va al doppio della velocità (SPI del display a 50 MHz invece di 25): quando il gioco scorre (camminare in Pokémon, livelli a scorrimento) l'immagine si aggiorna a circa 20 fps invece di 11, molto meno a scatti.
 
 **Novità della 1.1:** il firmware è costruito sulle librerie comuni di PicoPods. Display, tastiera (letta sul core 1), audio PWM, scheda SD, cache delle ROM in flash, menu e file manager vengono dalle librerie condivise (`../../lib`); in questa cartella restano solo il core dell'emulatore (`src/gb/`), `src/main.cpp` e `src/config.h`. Funziona anche su PC (build host di PicoPods). Serve un RP2350 (Pico 2 / Pico 2 W): il buffer video da 276 KB non entra nella RAM di un Pico originale.
 
@@ -60,7 +62,7 @@ PD_SDCARD=./sd PD_FRAMES=./frames PD_KEYS="down,enter,wait:3000,shot" ./build-ho
 
 ## Limiti noti
 
-- **Frame rate del display circa 10–12 fps**: il pannello accetta solo colore a 18 bit via SPI, a 25 MHz. Il gioco gira comunque a velocità piena, a 60 Hz, e salta solo alcuni fotogrammi a schermo.
+- **Frame rate del display circa 20 fps quando tutto lo schermo cambia** (scorrimento): il pannello accetta solo colore a 18 bit via SPI, quindi un fotogramma intero sono 276 KB, 44 ms a 50 MHz. Il gioco gira comunque a velocità piena, a 60 Hz, e a schermo arriva un fotogramma ogni tre; le scene ferme o con pochi sprite in movimento si aggiornano molto più spesso, perché si inviano solo le righe cambiate. Il contatore nella barra in alto (`60/20 fps`) mostra fotogrammi emulati / mostrati.
 - **Solo Game Boy originale**. I giochi "solo Game Boy Color" vengono rifiutati con un messaggio; quelli compatibili con entrambi girano in modalità DMG.
 - L'orologio MBC3 (RTC) avanza solo mentre il gioco è in esecuzione e non viene salvato nel `.sav`.
 - Nessun boot ROM Nintendo: l'emulatore parte direttamente dallo stato post-boot.
@@ -70,7 +72,7 @@ PD_SDCARD=./sd PD_FRAMES=./frames PD_KEYS="down,enter,wait:3000,shot" ./build-ho
 | Sintomo | Cosa provare |
 |---|---|
 | Nessun audio | `PD_PICOCALC_AUDIO_L=26` in `CMakeLists.txt` (le schede più vecchie usano GP26 invece di GP28) |
-| Display con artefatti | Abbassa `PD_PICOCALC_LCD_HZ` in `CMakeLists.txt` |
+| Display con artefatti o colori sbagliati | Riporta `PD_PICOCALC_LCD_HZ` a `25000000` in `CMakeLists.txt` (la 1.2 usa 50 MHz) |
 | Instabilità o crash casuali | `SYS_CLOCK_KHZ 150000` in `src/config.h` (niente overclock) |
 | Tastiera poco reattiva | `PD_PICOCALC_KBD_GAP_US=2000` in `CMakeLists.txt` |
 
