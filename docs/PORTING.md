@@ -125,3 +125,28 @@ PD_WINDOW=0 ./build-host/examples/demo/pd_demo                # headless, keys f
 
 What it does not show: anything below the HAL. The display, SD card, south
 bridge and audio drivers, SPI clocks and real timing only run on the device.
+
+### In the browser
+
+The host terminal also builds with Emscripten (`tools/build_web.sh`, needs
+the emsdk and `PICO_SDK_PATH`). Each pod becomes one self-contained file,
+`<pod>.pod.js`, that `web/index.html` loads; the page is the launcher and the
+runner (screen, touch keyboard, SD card panel, pod log).
+
+- **One thread.** A page cannot block, but pods are written as endless loops.
+  The pods are linked with Asyncify, and in the browser `pd::sys::sleep_*()`
+  and `now_us()` hand control back to the page about every 8 ms (a message
+  channel resumes the pod at once). Drawing, keys and sound happen in those
+  gaps. A loop that never sleeps nor reads the clock would freeze the page.
+  `launch_core1()` returns false, so the keyboard is polled.
+- **Front end:** `lib/hardware/terminals/host/src/host_web.cpp` exports the
+  framebuffer and a key entry point to the page and sends audio to Web Audio
+  (`web/app.js`). The keyboard (`web/keyboard.js`) sends the same press /
+  release codes as the PicoCalc; Shift, Ctrl and Alt are sticky on the touch
+  keyboard (tap once for the next key, twice to lock), and a PC keyboard works
+  too.
+- **SD card:** `/sd`, an IndexedDB folder shared by every pod in that browser,
+  loaded before `main()` and saved every 2 s and when the page is hidden.
+- **Not there:** `pd_net` uses its "No Wi-Fi" stub (no sockets in a page);
+  `pd_tls` compiles the Pico SDK's mbedTLS only so that Pod Files links.
+  Bluetooth is absent.
