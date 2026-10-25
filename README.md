@@ -14,7 +14,7 @@ PicoPods is one tree with two parts:
 
 | Pod | Folder | What it is |
 |---|---|---|
-| **PodBoy** 1.1 | [`pods/podboy`](pods/podboy) | Game Boy (DMG) emulator. Needs an RP2350 |
+| **PodBoy** 1.2 | [`pods/podboy`](pods/podboy) | Game Boy (DMG) emulator. Needs an RP2350 |
 | **Pod Writer** 3.0 | [`pods/podwriter`](pods/podwriter) | Text editor: files larger than RAM (SD-backed), undo, syntax colours, ePub export |
 | **Pod Files** 1.3 | [`pods/podfiles`](pods/podfiles) | File manager: copy / move / delete, Bluetooth, Git clone, USB drive mode |
 

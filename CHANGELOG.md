@@ -14,6 +14,10 @@
 
 ### Build and CI
 - G-host installs `libsdl2-dev`, so the window code is compiled on every push.
+### Pods
+- **PodBoy 1.2**: display SPI at 50 MHz instead of 25 MHz, so scrolling
+  scenes (every line changes) reach the screen at ~20 fps instead of ~11
+  (#12). The other pods keep the conservative 25 MHz.
 
 ## PicoPods 1.0.0 (2026-10-24)
 
