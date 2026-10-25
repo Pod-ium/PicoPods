@@ -17,6 +17,15 @@
 - **PodBoy 1.2**: display SPI at 50 MHz instead of 25 MHz, so scrolling
   scenes (every line changes) reach the screen at ~20 fps instead of ~11
   (#12). The other pods keep the conservative 25 MHz.
+- **PicoCraft 1.8** (new pod): the voxel sandbox game PicoCraft 1.7 moved
+  onto the libraries. 1.7 did not work on the PicoCalc: its own display
+  driver set 16-bit colour, which the panel ignores over SPI (it only takes
+  18-bit), toggled CS/DC with no settle time and split the window setup
+  from the pixels; its keyboard reads waited 150 µs instead of the 16 ms
+  the controller needs. The frame now goes to the panel in 18-bit bands by
+  DMA while both cores ray-cast the next one (rows handed out one at a
+  time), and the keyboard is read while core 1 renders. Saves of 1.7 still
+  load. Needs an RP2350.
 - Pod Writer, Pod Files: `main()` ends with `return 0` (needed now that the
   host window renames it).
 

@@ -11,7 +11,7 @@ set -eu
 root=$(cd "$(dirname "$0")/.." && pwd)
 out=${1:-$root/dist/web}
 build=${WEB_BUILD_DIR:-$root/build-web}
-pods="podboy podwriter podfiles pd_demo"   # the template and the USB probe are no use in a browser
+pods="podboy podwriter podfiles picocraft pd_demo"   # the template and the USB probe are no use in a browser
 
 command -v emcmake >/dev/null || { echo "emcmake not found: source emsdk_env.sh first"; exit 1; }
 : "${PICO_SDK_PATH:?set PICO_SDK_PATH (the browser build uses its mbedTLS)}"

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Builds the three pods for the PicoCalc + Pico 2 W and names the firmware
+# Builds the pods for the PicoCalc + Pico 2 W and names the firmware
 # files for a release:  <pod>_<version>.uf2
 #
 #   tools/package_release.sh <version> [outdir]
@@ -13,7 +13,7 @@ version=${1#v}
 out=${2:-$root/dist}
 board=${PD_BOARD:-pico2_w}
 build=${RELEASE_BUILD_DIR:-$root/build-release}
-pods="podboy podwriter podfiles"
+pods="podboy podwriter podfiles picocraft"
 
 case $version in
     ''|*/*|*' '*) echo "bad version: '$1'" >&2; exit 2 ;;

@@ -17,6 +17,7 @@ PicoPods is one tree with two parts:
 | **PodBoy** 1.2 | [`pods/podboy`](pods/podboy) | Game Boy (DMG) emulator. Needs an RP2350 |
 | **Pod Writer** 3.0 | [`pods/podwriter`](pods/podwriter) | Text editor: files larger than RAM (SD-backed), undo, syntax colours, ePub export |
 | **Pod Files** 1.3 | [`pods/podfiles`](pods/podfiles) | File manager: copy / move / delete, Bluetooth, Git clone, USB drive mode |
+| **PicoCraft** 1.8 | [`pods/picocraft`](pods/picocraft) | Voxel sandbox game: ray-cast block world on both cores, saves on the SD card. Needs an RP2350 |
 
 Examples (`examples/`): `pd_demo` (tour of the libraries and hardware
 check), `pd_template` (skeleton to copy for a new pod) and `pd_usbprobe`
@@ -87,9 +88,9 @@ yourself can be loaded from the page like cartridges and stay in its list.
 ## Releases
 
 Publishing a GitHub release runs `.github/workflows/release.yml`, which
-builds the three pods for PicoCalc + Pico 2 W and attaches them to the
-release as `podboy_<version>.uf2`, `podwriter_<version>.uf2` and
-`podfiles_<version>.uf2` (tag `v1.2.0` gives version `1.2.0`), plus a
+builds the pods for PicoCalc + Pico 2 W and attaches them to the
+release as `podboy_<version>.uf2`, `podwriter_<version>.uf2`,
+`podfiles_<version>.uf2` and `picocraft_<version>.uf2` (tag `v1.2.0` gives version `1.2.0`), plus a
 `SHA256SUMS_<version>.txt`. The same files can be built locally with
 `PICO_SDK_PATH=… tools/package_release.sh <version>` (output in `dist/`).
 The workflow can also be started by hand from the Actions tab for an
@@ -157,12 +158,12 @@ docs/         ARCHITECTURE, PORTING, MIGRATION, ROADMAP
 
 - Builds cleanly for `pico2_w`, `pico2`, `pico_w` and `pico` (PodBoy is
   skipped on RP2040) and for the host; CI checks all of them.
-- Host tests (24) pass: editor engine fuzz test with ASan/UBSan, syntax
+- Host tests (26) pass: editor engine fuzz test with ASan/UBSan, syntax
   lexer, ePub samples with structure checks, X3 upload against a mock
   server, core libraries (files, settings, input, drawing, dialogs,
   blitter, flash cache), tree operations, the Bluetooth OBEX receiver and
   simulated Bluetooth sessions, the BTstack lifecycle, and scripted
-  sessions of the demo and the three pods. Git clones of real
+  sessions of the demo and the pods. Git clones of real
   repositories run with `-DPD_NET_TESTS=ON` (needs network).
 - The drivers come from Writer and PicoBoy code that ran on real PicoCalc
   hardware, but **the pods in this tree have not been run on a device

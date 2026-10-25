@@ -1,4 +1,4 @@
-# On every published release: build PodBoy, Pod Writer and Pod Files for the
+# On every published release: build PodBoy, Pod Writer, Pod Files and PicoCraft for the
 # PicoCalc + Pico 2 W and attach them to the release as
 # <pod>_<version>.uf2 (e.g. podboy_1.0.0.uf2 for tag v1.0.0), with a
 # SHA256SUMS file. Can also be run by hand for an existing release tag.
