@@ -35,7 +35,7 @@ if(NOT TARGET pd_core)
     add_subdirectory(${_pd}/services/miniz      ${CMAKE_BINARY_DIR}/picopods/miniz)
 
     # Wi-Fi exists only on CYW43 boards (and in the host simulation).
-    if(PD_HOST OR PICO_CYW43_SUPPORTED)
+    if((PD_HOST AND NOT EMSCRIPTEN) OR PICO_CYW43_SUPPORTED)
         set(PD_HAS_WIFI ON CACHE INTERNAL "")
     else()
         set(PD_HAS_WIFI OFF CACHE INTERNAL "")
@@ -67,7 +67,24 @@ function(picopods_add_pod name)
         set(A_VERSION "0.1")
     endif()
     target_compile_definitions(${name} PRIVATE PD_APP_VERSION="${A_VERSION}")
-    if(PD_HOST)
+    if(EMSCRIPTEN)
+        # One self-contained file per pod (<name>.pod.js, the wasm inside),
+        # loaded by web/run.html: Asyncify lets the pod's blocking main loop
+        # yield to the browser (see sys_host.cpp), /sd is IndexedDB-backed.
+        target_link_libraries(${name} PRIVATE pd_host_web)
+        set_target_properties(${name} PROPERTIES SUFFIX ".pod.js")
+        if(NOT A_TITLE)
+            set(A_TITLE ${name})
+        endif()
+        file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${name}.pod.json
+            "{\"name\": \"${name}\", \"title\": \"${A_TITLE}\", \"version\": \"${A_VERSION}\"}\n")
+        target_link_options(${name} PRIVATE -sASYNCIFY -sASYNCIFY_STACK_SIZE=65536
+            -sMODULARIZE -sEXPORT_NAME=createPod -sSINGLE_FILE -sENVIRONMENT=web
+            -sALLOW_MEMORY_GROWTH -sINITIAL_MEMORY=33554432 -sSTACK_SIZE=1048576
+            -sEXIT_RUNTIME -lidbfs.js
+            "-sEXPORTED_FUNCTIONS=_main,_pd_web_key,_pd_web_frame,_pd_web_frame_generation,_pd_web_width,_pd_web_height"
+            "-sEXPORTED_RUNTIME_METHODS=FS,IDBFS,HEAPU8,HEAP16,addRunDependency,removeRunDependency")
+    elseif(PD_HOST)
         target_compile_options(${name} PRIVATE -g)
         if(PD_HOST_WINDOW)
             target_link_libraries(${name} PRIVATE pd_host_window)

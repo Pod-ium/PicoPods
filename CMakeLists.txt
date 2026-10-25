@@ -22,7 +22,7 @@ add_subdirectory(examples/demo)
 add_subdirectory(examples/template)
 add_subdirectory(examples/usbprobe)
 
-if(PD_HOST)
+if(PD_HOST AND NOT EMSCRIPTEN)   # the browser build has pods only
     enable_testing()
     add_subdirectory(tests)
 endif()

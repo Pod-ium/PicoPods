@@ -42,6 +42,9 @@ cmake --build build-host -j && ctest --test-dir build-host
 # ...and with SDL2 installed, any pod runs in a window (keyboard, sound):
 PD_SDCARD=./sd ./build-host/pods/podboy/podboy
 
+# Browser build: the pods on a phone or any browser (see below)
+PICO_SDK_PATH=/path/to/pico-sdk tools/build_web.sh   # -> dist/web
+
 # Both merge gates in one go
 PICO_SDK_PATH=/path/to/pico-sdk tools/gate.sh all
 ```
@@ -62,6 +65,24 @@ cache, the demo's flash test) stays inside the app partition on the RP2350
 and below the loader's top 16 KB on the RP2040. Bluetooth pairings live on the
 SD card, never in flash. **First run on new hardware:** flash `pd_demo.uf2`
 and go through its keyboard, colour, audio and flash-cache screens.
+
+## In the browser (PicoPods Web)
+
+`tools/build_web.sh` builds the pods with Emscripten into one page plus one
+`<pod>.pod.js` file per pod (`dist/web`). Open it on a phone: the PicoCalc
+screen with a touch PicoCalc keyboard under it, sound, and an SD card kept in
+the browser (add ROMs and files from its **SD** panel). Pod files you build
+yourself can be loaded from the page like cartridges and stay in its list.
+
+- Serve it locally with `python3 -m http.server -d dist/web 8000`, or take
+  the `picopods-web` artifact of any CI run.
+- To have it online at `https://<user>.github.io/<repo>/`, enable GitHub
+  Pages with source "GitHub Actions" and set the repository variable
+  `PICOPODS_PAGES` to `true`: `.github/workflows/pages.yml` then publishes
+  it on every push to `main`.
+- Wi-Fi, Git and Bluetooth do not work there (a web page cannot open
+  sockets). Like the PC simulator, it runs the pods' code, not the hardware
+  drivers. Details: [docs/PORTING.md](docs/PORTING.md#in-the-browser).
 
 ## Releases
 

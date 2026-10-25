@@ -5,7 +5,10 @@
 add_library(pd_net INTERFACE)
 target_include_directories(pd_net INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
 target_link_libraries(pd_net INTERFACE pd_core)
-if(PD_HOST)
+if(EMSCRIPTEN)
+    # A web page cannot open TCP sockets: report "No Wi-Fi", as on a Pico 2.
+    target_sources(pd_net INTERFACE ${CMAKE_CURRENT_LIST_DIR}/src/net_none.cpp)
+elseif(PD_HOST)
     target_sources(pd_net INTERFACE ${CMAKE_CURRENT_LIST_DIR}/src/net_posix.cpp)
 elseif(PICO_CYW43_SUPPORTED)
     target_sources(pd_net INTERFACE ${CMAKE_CURRENT_LIST_DIR}/src/net_cyw43.cpp)

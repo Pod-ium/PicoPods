@@ -8,6 +8,11 @@
   `PD_WINDOW`, `PD_SCALE`; built when SDL2 is found (`-DPD_HOST_SDL`).
   Headless runs and the tests are unchanged.
 
+- PicoPods Web: the pods in a browser (`tools/build_web.sh`, `web/`), with
+  a touch PicoCalc keyboard, sound, an IndexedDB SD card and pod files that
+  load like cartridges. `pd::sys` yields to the page from its sleeps and
+  clock (Asyncify); `pd_net` has no Wi-Fi there.
+
 ### Pods
 - **PodBoy 1.2**: display SPI at 50 MHz instead of 25 MHz, so scrolling
   scenes (every line changes) reach the screen at ~20 fps instead of ~11
@@ -17,6 +22,8 @@
 
 ### Build and CI
 - G-host installs `libsdl2-dev`, so the window code is compiled on every push.
+- G-web builds PicoPods Web on every push (artifact `picopods-web`);
+  `pages.yml` publishes it to GitHub Pages once enabled (`PICOPODS_PAGES`).
 
 ## PicoPods 1.0.0 (2026-10-24)
 
