@@ -39,6 +39,8 @@ cmake -B build-pico -DPD_BOARD=pico        # also pico_w, pico2, or any Pico SDK
 # PC build: simulator + tests
 cmake -B build-host -DPD_TERMINAL=host -DPICO_SDK_PATH=/path/to/pico-sdk
 cmake --build build-host -j && ctest --test-dir build-host
+# ...and with SDL2 installed, any pod runs in a window (keyboard, sound):
+PD_SDCARD=./sd ./build-host/pods/podboy/podboy
 
 # Both merge gates in one go
 PICO_SDK_PATH=/path/to/pico-sdk tools/gate.sh all
@@ -47,6 +49,8 @@ PICO_SDK_PATH=/path/to/pico-sdk tools/gate.sh all
 Needs Pico SDK 2.1.x, `arm-none-eabi-gcc` and CMake ≥ 3.13. The host build
 needs any C++17 compiler, Python 3, and `libmbedtls-dev` for the TLS/Git
 tests; `PICO_SDK_PATH` there enables the Bluetooth tests (BTstack sources).
+With `libsdl2-dev` (or SDL2 from Homebrew / MSYS2) it also builds the
+interactive window, see [the host terminal](docs/PORTING.md#the-host-terminal).
 
 Ready-to-flash `.uf2` files for every board are attached to each CI run
 (artifacts `picopods-<board>`). Flash the `.uf2` in BOOTSEL mode, or run it from the SD card with

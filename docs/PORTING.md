@@ -96,3 +96,32 @@ Things to check on a new terminal:
 ```sh
 PD_SDCARD=./sd PD_FRAMES=./frames PD_KEYS="down,enter,text:hello,enter,esc" ./build-host/examples/demo/pd_demo
 ```
+
+### Interactive window
+
+When SDL2 is installed (`-DPD_HOST_SDL=AUTO`, the default; `ON` makes it
+required, `OFF` leaves it out), every pod also gets a window: the PicoCalc
+screen scaled up, the PC keyboard as the PicoCalc keyboard, and real sound.
+It opens when `PD_KEYS` is not set, so tests and scripts stay headless:
+
+```sh
+PD_SDCARD=./sd ./build-host/pods/podwriter/podwriter          # window
+PD_SCALE=3 PD_SDCARD=./sd ./build-host/pods/podboy/podboy     # bigger window
+PD_WINDOW=1 PD_KEYS="down,enter" ./build-host/examples/demo/pd_demo   # play a script, then stay open
+PD_WINDOW=0 ./build-host/examples/demo/pd_demo                # headless, keys from stdin
+```
+
+- **Keys.** Arrows, Enter, Esc, Backspace, Tab, Del, Insert, Home, End,
+  PgUp/PgDn, F1–F10, Shift, Ctrl, left Alt and Caps Lock map to the PicoCalc
+  keys of the same name, Pause to Break. Text keys type what your layout
+  types (Shift+a is `A`, AltGr works). Only ASCII, like the PicoCalc.
+- **F12** saves a screenshot as PPM (in `PD_FRAMES`, or the current folder).
+- **Threads.** The window needs the main thread, so in these builds
+  `picopods_add_pod()` renames the pod's `main()` to `pd_host_app_main` and
+  runs it on a second thread. `main()` must therefore end with a `return`
+  (the compiler warns otherwise).
+- **No display** (SSH, CI): the pod runs headless as if `PD_WINDOW=0`. No
+  sound card: it runs silent, still paced in real time.
+
+What it does not show: anything below the HAL. The display, SD card, south
+bridge and audio drivers, SPI clocks and real timing only run on the device.

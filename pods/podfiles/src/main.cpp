@@ -1675,4 +1675,5 @@ int main() {
     pd::diag::stage(kReady);
     pd::diag::done();
     fm.run();
+    return 0;
 }

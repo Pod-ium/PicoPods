@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+### Libraries
+- Host terminal: interactive SDL2 window for every pod (screen, live
+  keyboard, sound; F12 saves a screenshot). Opens when `PD_KEYS` is not set;
+  `PD_WINDOW`, `PD_SCALE`; built when SDL2 is found (`-DPD_HOST_SDL`).
+  Headless runs and the tests are unchanged.
+
+### Pods
+- Pod Writer, Pod Files: `main()` ends with `return 0` (needed now that the
+  host window renames it).
+
+### Build and CI
+- G-host installs `libsdl2-dev`, so the window code is compiled on every push.
+
 ## PicoPods 1.0.0 (2026-10-24)
 
 First release of the PicoPods tree: the common PicoCalc libraries and three

@@ -25,7 +25,7 @@ jobs:
           path: pico-sdk
           submodules: true
       - name: Packages
-        run: sudo apt-get update && sudo apt-get install -y cmake ninja-build g++ python3 libmbedtls-dev unzip
+        run: sudo apt-get update && sudo apt-get install -y cmake ninja-build g++ python3 libmbedtls-dev libsdl2-dev unzip
       - name: Gate
         env:
           PICO_SDK_PATH: ${{ github.workspace }}/pico-sdk
