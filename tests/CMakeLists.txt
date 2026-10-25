@@ -15,6 +15,9 @@ pd_host_test(core_test SOURCES core_test.cpp LIBS pd_app pd_flash_cache)
 add_test(NAME core COMMAND core_test WORKING_DIRECTORY ${_tmp})
 set_tests_properties(core PROPERTIES ENVIRONMENT "PD_SDCARD=${_tmp}/sd;PD_KEYS=")
 
+pd_host_test(clock_test SOURCES clock_test.cpp LIBS pd_core)
+add_test(NAME clock COMMAND clock_test)
+
 pd_host_test(fs_ops_test SOURCES fs_ops_test.cpp LIBS pd_fs)
 add_test(NAME fs_ops COMMAND fs_ops_test ${_tmp}/fs_ops_sd)
 file(MAKE_DIRECTORY ${_tmp}/fs_ops_sd)

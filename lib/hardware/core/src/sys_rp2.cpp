@@ -5,6 +5,7 @@
 #include "hardware/vreg.h"
 #include "hardware/watchdog.h"
 #include "pd/board.h"
+#include "pd/clock_plan.h"
 #include "pd/sys.h"
 #include "pico/bootrom.h"
 #include "pico/flash.h"
@@ -44,8 +45,7 @@ bool set_clock_khz(uint32_t khz) {
     // SPI/I2C/UART dividers are recomputed by the drivers' init(), after this.
     const uint32_t hz = khz * 1000;
 #if PD_CHIP_RP2350
-    uint32_t div = (khz + board::default_clock_khz() - 1) / board::default_clock_khz();
-    if (div > 3) div = 3;   // CLK_PERI_DIV is 1..3
+    const uint32_t div = clock::peri_div(khz, board::default_clock_khz(), true);
     clock_configure_int_divider(clk_peri, 0, CLOCKS_CLK_PERI_CTRL_AUXSRC_VALUE_CLK_SYS, hz, div);
 #else
     clock_configure_undivided(clk_peri, 0, CLOCKS_CLK_PERI_CTRL_AUXSRC_VALUE_CLK_SYS, hz);
