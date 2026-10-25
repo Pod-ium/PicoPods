@@ -99,4 +99,4 @@ src/config.h      risoluzione, mondo, distanza visiva, clock
 - FatFs (ChaN): licenza BSD-style, vedi `lib/services/fs/fatfs/LICENSE.txt`.
 - Font Terminus (schermata iniziale, Dimitar Toshkov Zhekov): SIL Open Font License 1.1.
 
-**Stato:** la 1.8 è stata compilata per Pico 2 W e provata su PC (build host: titolo, gioco, menu, salvataggio e caricamento); non è ancora stata provata sull'hardware.
+**Stato:** la 1.8 è stata provata brevemente su PicoCalc con Pico 2 W (display, tastiera e gioco funzionano) e su PC (build host: titolo, gioco, menu, salvataggio e caricamento).
