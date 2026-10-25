@@ -16,6 +16,7 @@ include(cmake/picopods.cmake)
 add_subdirectory(pods/podboy)
 add_subdirectory(pods/podwriter)
 add_subdirectory(pods/podfiles)
+add_subdirectory(pods/picocraft)
 
 # Examples: hardware check / library tour, pod skeleton, USB port probe
 add_subdirectory(examples/demo)

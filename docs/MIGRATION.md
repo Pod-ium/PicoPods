@@ -46,6 +46,20 @@ What stays in PicoBoy: the emulator core (`src/gb/`), key bindings, palettes, th
 
 Keep in mind that dialogs do not flush the keyboard: call `ui.kbd.flush()` before opening the pause menu, as PicoBoy already does.
 
+## PicoCraft 1.7
+
+PicoCraft came from outside the tree (a standalone Pico SDK project with its own drivers) and is now `pods/picocraft` (1.8). Its game engine moved over unchanged apart from C → C++; every hardware file was replaced.
+
+| PicoCraft 1.7 | PicoPods | Notes |
+|---|---|---|
+| `src/config.h` hardware section | `pd/terminals/picocalc.h` | Same pins. `LCD_SPI_HZ` → `PD_PICOCALC_LCD_HZ` (50 MHz, as PodBoy), `KBD_I2C_HZ` → `PD_PICOCALC_KBD_HZ`, `SYS_CLOCK_KHZ` → `TerminalConfig::clock_khz`; `vreg_set_voltage` is done by `sys::set_clock_khz`. |
+| `src/lcd.*` | `St7365p` (`terminal.display()`) + `src/screen.cpp` | 1.7 sent RGB565 after `COLMOD 0x55`, which the panel ignores over SPI: it only takes 18-bit colour. `screen.cpp` scales the 160×160 RGB565 frame 2× into 18-bit bands and streams them with `write_async`, one band converted while the previous one is in flight; `pump()` is called between rendered rows. `IndexedBlitter` does not fit: its whole-frame buffer would be 300 KB next to a 256 KB world. |
+| `src/kbd.*` | `pd::input::Keyboard::poll_raw` | 1.7 waited 150 µs between the register write and the read; the controller needs the reference 16 ms. Letters are lower-cased in the pod, which keeps its own down/hit tables. Read on core 0 while core 1 renders. |
+| `src/sdcard.c`, `src/fatfs/`, `src/storage.c` | `pd_fs` | Same save format. The card is mounted on first save/load, so the game starts without one. |
+| `src/fault.c` | `pd_diag` | Crash screen for HardFault and panic. |
+| `multicore_launch_core1` + FIFO, rows split even/odd | `sys::launch_core1` + `render_claimed()` | Rows are handed out by an atomic counter, so core 0 can also feed the display and read the keyboard. No core 1 (browser): core 0 renders everything. |
+| `host/` (PC test programs) | host terminal | The pod runs on the PC (window or scripted keys, test `picocraft_script`) and in the browser. |
+
 ## From picodev to PicoPods
 
 PicoPods is picodev 2 renamed and reorganised. An app written for picodev
